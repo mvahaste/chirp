@@ -161,3 +161,27 @@ export const deletePostAction = async (id: string) => {
 
   return true;
 };
+
+export const likePostAction = async (id: string) => {
+  const supabase = await createClient();
+  const { error } = await supabase.from("likes").insert([{ post_id: id }]);
+
+  if (error) {
+    console.error(error.message);
+    return false;
+  }
+
+  return true;
+}
+
+export const unlikePostAction = async (id: string) => {
+  const supabase = await createClient();
+  const { error } = await supabase.from("likes").delete().match({ post_id: id });
+
+  if (error) {
+    console.error(error.message);
+    return false;
+  }
+
+  return true;
+}
