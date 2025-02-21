@@ -8,6 +8,7 @@ import {
 import { Button } from "./ui/button";
 import { useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import { LucideHeart, LucideMessageCircle, LucideTrash } from "lucide-react";
 
 interface PostProps {
   post: any;
@@ -96,32 +97,42 @@ export default function Post({ post }: PostProps) {
       </div>
       {/* Interactions */}
       <div className="flex flex-row gap-4">
-        <Button
-          onClick={async () => {
-            const result = hasLiked
-              ? await unlikePostAction(post.id)
-              : await likePostAction(post.id);
+        <div className="flex items-center gap-6">
+          <button
+            className="group flex items-center gap-2 text-muted-foreground transition-colors hover:text-rose-500"
+            onClick={async () => {
+              const result = hasLiked
+                ? await unlikePostAction(post.id)
+                : await likePostAction(post.id);
 
-            const previousHasLiked = hasLiked;
+              const previousHasLiked = hasLiked;
 
-            if (result) {
-              setHasLiked(!hasLiked);
+              if (result) {
+                setHasLiked(!hasLiked);
 
-              if (previousHasLiked) {
-                post.likes_count--;
-              } else {
-                post.likes_count++;
+                if (previousHasLiked) {
+                  post.likes_count--;
+                } else {
+                  post.likes_count++;
+                }
               }
-            }
-          }}
-        >
-          Like{hasLiked ? "d" : ""} ({post.likes_count})
-        </Button>
-        <Button>Reply ({post.replies_count})</Button>
+            }}
+          >
+            <LucideHeart className="h-4 w-4 transition-colors group-hover:fill-rose-500" />
+            <span className="text-sm">{post.likes_count}</span>
+          </button>
+          <button
+            className="group flex items-center gap-2 text-muted-foreground transition-colors hover:text-sky-500"
+            onClick={() => {}}
+          >
+            <LucideMessageCircle className="h-4 w-4" />
+            <span className="text-sm">{post.replies_count}</span>
+          </button>
+        </div>
         <div className="flex-grow" />
         {post.is_author && (
-          <Button
-            variant="destructive"
+          <button
+            className="group flex items-center gap-2 text-muted-foreground transition-colors hover:text-red-500"
             onClick={async () => {
               const result = await deletePostAction(post.id);
 
@@ -130,8 +141,8 @@ export default function Post({ post }: PostProps) {
               }
             }}
           >
-            Delete
-          </Button>
+            <LucideTrash className="h-4 w-4" />
+          </button>
         )}
       </div>
     </div>

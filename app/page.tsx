@@ -24,7 +24,7 @@ export default function Home() {
   }, []);
 
   return (
-    <main className="flex flex-1 flex-col gap-4">
+    <main className="flex w-full flex-col gap-4">
       <form className="flex flex-col gap-2">
         <AutosizeTextarea
           className="resize-none"
