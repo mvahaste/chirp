@@ -10,6 +10,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { LucideHeart, LucideMessageCircle, LucideTrash } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
 import { createClient } from "@/utils/supabase/client";
+import Link from "next/link";
 
 interface PostProps {
   post: any;
@@ -96,7 +97,7 @@ export default function Post({ post }: PostProps) {
       {/*   {JSON.stringify(post, null, 2)} */}
       {/* </pre> */}
       {/* Author info */}
-      <div className="flex items-start gap-3">
+      <Link className="group flex items-start gap-3" href={"/" + post.username}>
         <Avatar className="h-10 w-10">
           <AvatarImage src={post.avatar} alt={post.username} />
           <AvatarFallback>{avatarFallback(post.display_name)}</AvatarFallback>
@@ -104,7 +105,9 @@ export default function Post({ post }: PostProps) {
         <div className="flex-1">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="text-sm font-medium">{post.display_name}</h2>
+              <h2 className="text-sm font-medium decoration-1 group-hover:underline">
+                {post.display_name}
+              </h2>
               <div className="flex items-center gap-2 text-muted-foreground">
                 <span className="text-sm">@{post.username}</span>
                 <span className="text-xs">•</span>
@@ -122,7 +125,7 @@ export default function Post({ post }: PostProps) {
             </div>
           </div>
         </div>
-      </div>
+      </Link>
       {/* Content */}
       <div className="text-sm">
         <p className="whitespace-pre">{post.content}</p>
