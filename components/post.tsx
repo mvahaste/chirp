@@ -1,6 +1,10 @@
 "use client";
 
-import { deletePostAction, likePostAction, unlikePostAction } from "@/app/actions";
+import {
+  deletePostAction,
+  likePostAction,
+  unlikePostAction,
+} from "@/app/actions";
 import { Button } from "./ui/button";
 import { useState } from "react";
 
@@ -20,21 +24,27 @@ export default function Post({ post }: PostProps) {
         {JSON.stringify(post, null, 2)}
       </pre>
       <div className="flex flex-row gap-4">
-        <Button onClick={async () => {
-          const result = hasLiked ? await unlikePostAction(post.id) : await likePostAction(post.id);
+        <Button
+          onClick={async () => {
+            const result = hasLiked
+              ? await unlikePostAction(post.id)
+              : await likePostAction(post.id);
 
-          const previousHasLiked = hasLiked;
+            const previousHasLiked = hasLiked;
 
-          if (result) {
-            setHasLiked(!hasLiked);
+            if (result) {
+              setHasLiked(!hasLiked);
 
-            if (previousHasLiked) {
-              post.likes_count--;
-            } else {
-              post.likes_count++;
+              if (previousHasLiked) {
+                post.likes_count--;
+              } else {
+                post.likes_count++;
+              }
             }
-          }
-        }}>Like{hasLiked ? "d" : ""} ({post.likes_count})</Button>
+          }}
+        >
+          Like{hasLiked ? "d" : ""} ({post.likes_count})
+        </Button>
         <Button>Reply ({post.replies_count})</Button>
         <div className="flex-grow" />
         {post.is_author && (
