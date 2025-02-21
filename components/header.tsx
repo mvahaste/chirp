@@ -14,9 +14,9 @@ export default function Header() {
             <Bird /> Chirp
           </Link>
         </div>
-        <div className="flex flex-row gap-8 items-center">
-        <HeaderNav />
-        {!hasEnvVars ? <EnvVarWarning /> : <HeaderAuth />}
+        <div className="flex flex-row items-center gap-8">
+          <HeaderNav />
+          {!hasEnvVars ? <EnvVarWarning /> : <HeaderAuth />}
         </div>
       </div>
     </header>
