@@ -24,17 +24,15 @@ export default function Home() {
 
   return (
     <main className="flex flex-1 flex-col gap-4">
-      <form className="flex min-w-64 flex-col">
-        <div className="flex flex-col gap-2">
-          <AutosizeTextarea
-            name="content"
-            placeholder="Post something..."
-            required
-          />
-          <SubmitButton pendingText="Posting..." formAction={newPostAction}>
-            Post
-          </SubmitButton>
-        </div>
+      <form className="flex flex-col gap-2">
+        <AutosizeTextarea
+          name="content"
+          placeholder="Post something..."
+          required
+        />
+        <SubmitButton pendingText="Posting..." formAction={newPostAction}>
+          Post
+        </SubmitButton>
       </form>
       <div className="flex flex-col gap-4">
         {posts?.map((post) => (
