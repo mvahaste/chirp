@@ -2,7 +2,7 @@
 
 ## Features
 
-- [ ] Profile
+- [ ] Profiles
   - [ ] Username - 32 characters [a-zA-Z0-9._-]
   - [ ] Display name - 32 characters
   - [ ] Avatar - image upload

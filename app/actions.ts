@@ -136,3 +136,16 @@ export const signOutAction = async () => {
   await supabase.auth.signOut();
   return redirect("/sign-in");
 };
+
+export const newPostAction = async (formData: FormData) => {
+  const content = formData.get("content") as string;
+  const supabase = await createClient();
+  const { error } = await supabase.from("posts").insert([{ content }]);
+
+  if (error) {
+    console.error(error.message);
+    return encodedRedirect("error", "/", "Could not create post");
+  }
+
+  return redirect("/");
+};
