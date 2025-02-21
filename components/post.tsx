@@ -110,33 +110,34 @@ export default function Post({ post }: PostProps) {
         </div>
       </div>
       {/* Content */}
-      <div>
+      <div className="text-sm">
         <p className="whitespace-pre">{post.content}</p>
       </div>
       {/* Interactions */}
       <div className="flex flex-row gap-4">
         <div className="flex items-center gap-6">
           <button
-            className="group flex items-center gap-2 text-muted-foreground transition-colors hover:text-rose-500"
+            className={`${hasLiked ? "text-rose-500" : ""} group flex items-center gap-2 text-muted-foreground transition-colors hover:text-rose-500`}
             onClick={async () => {
+              // Update the UI optimistically
+              setHasLiked(!hasLiked);
+              post.likes_count += hasLiked ? -1 : 1;
+
+              // Update the server
               const result = hasLiked
                 ? await unlikePostAction(post.id)
                 : await likePostAction(post.id);
 
-              const previousHasLiked = hasLiked;
-
-              if (result) {
-                setHasLiked(!hasLiked);
-
-                if (previousHasLiked) {
-                  post.likes_count--;
-                } else {
-                  post.likes_count++;
-                }
+              // If the server update fails, revert the UI
+              if (!result) {
+                setHasLiked(hasLiked);
+                post.likes_count += hasLiked ? 1 : -1;
               }
             }}
           >
-            <LucideHeart className="h-4 w-4 transition-colors group-hover:fill-rose-500" />
+            <LucideHeart
+              className={`${hasLiked ? "fill-rose-500" : ""} h-4 w-4 transition-colors`}
+            />
             <span className="text-sm">{post.likes_count}</span>
           </button>
           <button
