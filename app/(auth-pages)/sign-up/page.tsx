@@ -30,9 +30,19 @@ export default async function Signup(props: {
         </p>
         <div className="mt-8 flex flex-col gap-2 [&>input]:mb-3">
           <Label htmlFor="email">Email</Label>
-          <Input name="email" type="email" placeholder="you@example.com" required />
+          <Input
+            name="email"
+            type="email"
+            placeholder="you@example.com"
+            required
+          />
           <Label htmlFor="username">Username</Label>
-          <Input name="username" type="text" placeholder="Your username" required />
+          <Input
+            name="username"
+            type="text"
+            placeholder="Your username"
+            required
+          />
           <Label htmlFor="password">Password</Label>
           <Input
             type="password"

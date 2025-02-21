@@ -22,4 +22,3 @@
   - [ ] Replies - posts have a parent_id column that references the parent post, NULL for 'root' posts
 - [ ] Likes
 - [ ] Following
-
