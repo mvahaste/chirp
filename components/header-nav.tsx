@@ -33,7 +33,7 @@ export default function HeaderNav() {
       label: "Home",
     },
     {
-      path: "/" + username,
+      path: username ? "/" + username : "",
       label: "Profile",
     },
   ];
@@ -42,7 +42,7 @@ export default function HeaderNav() {
     <>
       {links.map((link) => (
         <Link
-          key={link.path}
+          key={link.label}
           href={link.path}
           className={pathname == link.path ? "font-semibold" : ""}
         >
