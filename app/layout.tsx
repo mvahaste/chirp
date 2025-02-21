@@ -6,6 +6,7 @@ import { Geist } from "next/font/google";
 import { ThemeProvider } from "next-themes";
 import Link from "next/link";
 import "./globals.css";
+import { Bird } from "lucide-react";
 
 const defaultUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
@@ -41,7 +42,7 @@ export default function RootLayout({
               <header className="border-grid sticky top-0 z-50 flex h-16 w-full justify-center border-b border-b-foreground/10 bg-background/95 shadow-sm backdrop-blur supports-[backdrop-filter]:bg-background/60">
                 <div className="flex w-full max-w-5xl items-center justify-between p-3 px-5 text-sm">
                   <div className="flex items-center gap-5 font-semibold">
-                    <Link href={"/"}>Chirp</Link>
+                    <Link href={"/"} className="inline-flex items-center gap-3"><Bird /> Chirp</Link>
                   </div>
                   {!hasEnvVars ? <EnvVarWarning /> : <HeaderAuth />}
                 </div>
