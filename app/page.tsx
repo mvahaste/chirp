@@ -1,6 +1,6 @@
 export default async function Home() {
   return (
-    <main className="flex flex-1 flex-col gap-6 px-4">
+    <main className="flex flex-1 flex-col px-4">
       <p>
         Nisi magna occaecat est in. Anim officia enim ullamco magna id quis esse
         aute sint eiusmod eiusmod mollit id fugiat Lorem. Ullamco occaecat irure

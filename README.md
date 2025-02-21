@@ -8,7 +8,7 @@
   - [ ] Avatar - image upload
   - [ ] Bio - 160 characters
   - [ ] Is private - boolean
-  - [ ] Public profile page that shows the user's posts, follows and followers if profile is not public
+  - [ ] Public profile - page that shows the user's posts, follows and followers if profile is not public
 - [ ] Posts
   - [ ] Show author info
     - [ ] Avatar
