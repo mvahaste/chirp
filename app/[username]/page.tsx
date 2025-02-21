@@ -9,22 +9,47 @@ export default async function ProfilePage({
 
   // Fetch user data from supabase
   const supabase = await createClient();
-  const result = await supabase
+  const { error, data } = await supabase
     .from("profiles")
     .select()
     .eq("username", username);
 
-  if (result.error) {
+  if (error) {
     return <div>Error fetching user data.</div>;
   }
 
-  if (result.data.length === 0) {
+  if (!data || data.length == 0) {
     return <div>User not found.</div>;
   }
 
+  const posts = await supabase
+    .from("public_posts")
+    .select()
+    .eq("username", username)
+    .is("parent_id", null);
+
+  const replies = await supabase
+    .from("public_posts")
+    .select()
+    .eq("username", username)
+    .not("parent_id", "is", null);
+
   return (
-    <pre className="rounded-md border p-3 text-xs">
-      {JSON.stringify(result, null, 2)}
-    </pre>
+    <div>
+      <p>User info</p>
+      <pre className="rounded-md border p-3 text-xs">
+        {JSON.stringify(data, null, 2)}
+      </pre>
+      <br />
+      <p>User posts</p>
+      <pre className="rounded-md border p-3 text-xs">
+        {JSON.stringify(posts, null, 2)}
+      </pre>
+      <br />
+      <p>User replies</p>
+      <pre className="rounded-md border p-3 text-xs">
+        {JSON.stringify(replies, null, 2)}
+      </pre>
+    </div>
   );
 }
