@@ -1,7 +1,6 @@
 "use client";
 
 import { SubmitButton } from "@/components/submit-button";
-import { Input } from "@/components/ui/input";
 import { newPostAction } from "./actions";
 import { useEffect, useState } from "react";
 import { createClient } from "@/utils/supabase/client";

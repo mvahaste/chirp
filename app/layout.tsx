@@ -1,12 +1,6 @@
-import { EnvVarWarning } from "@/components/env-var-warning";
-import HeaderAuth from "@/components/header-auth";
-import { ThemeSwitcher } from "@/components/theme-switcher";
-import { hasEnvVars } from "@/utils/supabase/check-env-vars";
 import { Geist } from "next/font/google";
 import { ThemeProvider } from "next-themes";
-import Link from "next/link";
 import "./globals.css";
-import { Bird } from "lucide-react";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
 import { TooltipProvider } from "@/components/ui/tooltip";
