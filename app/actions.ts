@@ -149,3 +149,15 @@ export const newPostAction = async (formData: FormData) => {
 
   return redirect("/");
 };
+
+export const deletePostAction = async (id: string) => {
+  const supabase = await createClient();
+  const { error } = await supabase.from("posts").delete().match({ id });
+
+  if (error) {
+    console.error(error.message);
+    return false;
+  }
+
+  return true;
+};

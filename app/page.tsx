@@ -6,6 +6,7 @@ import { newPostAction } from "./actions";
 import { useEffect, useState } from "react";
 import { createClient } from "@/utils/supabase/client";
 import { AutosizeTextarea } from "@/components/ui/autosize-textarea";
+import Post from "@/components/post";
 
 export default function Home() {
   const [posts, setPosts] = useState<any[] | null>(null);
@@ -26,6 +27,7 @@ export default function Home() {
     <main className="flex flex-1 flex-col gap-4">
       <form className="flex flex-col gap-2">
         <AutosizeTextarea
+          className="resize-none"
           name="content"
           placeholder="Post something..."
           required
@@ -35,11 +37,7 @@ export default function Home() {
         </SubmitButton>
       </form>
       <div className="flex flex-col gap-4">
-        {posts?.map((post) => (
-          <pre key={post.id} className="rounded-lg border p-3 text-xs">
-            {JSON.stringify(post, null, 2)}
-          </pre>
-        ))}
+        {posts?.map((post) => <Post key={post.id} post={post} />)}
       </div>
     </main>
   );
