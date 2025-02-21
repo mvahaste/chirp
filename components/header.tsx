@@ -3,6 +3,7 @@ import { Bird } from "lucide-react";
 import Link from "next/link";
 import { EnvVarWarning } from "./env-var-warning";
 import HeaderAuth from "./header-auth";
+import HeaderNav from "./header-nav";
 
 export default function Header() {
   return (
@@ -13,7 +14,10 @@ export default function Header() {
             <Bird /> Chirp
           </Link>
         </div>
+        <div className="flex flex-row gap-8 items-center">
+        <HeaderNav />
         {!hasEnvVars ? <EnvVarWarning /> : <HeaderAuth />}
+        </div>
       </div>
     </header>
   );
