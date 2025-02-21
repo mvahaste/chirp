@@ -9,6 +9,7 @@ import "./globals.css";
 import { Bird } from "lucide-react";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
+import { TooltipProvider } from "@/components/ui/tooltip";
 
 const defaultUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
@@ -39,15 +40,17 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <main className="flex min-h-screen flex-col items-center">
-            <div className="flex w-full flex-1 flex-col items-center">
-              <Header />
-              <div className="flex w-full max-w-lg flex-grow flex-col p-5">
-                {children}
+          <TooltipProvider>
+            <main className="flex min-h-screen flex-col items-center">
+              <div className="flex w-full flex-1 flex-col items-center">
+                <Header />
+                <div className="flex w-full max-w-lg flex-grow flex-col p-5">
+                  {children}
+                </div>
               </div>
-            </div>
-            <Footer />
-          </main>
+              <Footer />
+            </main>
+          </TooltipProvider>
         </ThemeProvider>
       </body>
     </html>

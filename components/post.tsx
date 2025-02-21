@@ -9,6 +9,7 @@ import { Button } from "./ui/button";
 import { useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { LucideHeart, LucideMessageCircle, LucideTrash } from "lucide-react";
+import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
 
 interface PostProps {
   post: any;
@@ -55,6 +56,16 @@ export default function Post({ post }: PostProps) {
     }
   };
 
+  const readableDate = (date: Date) => {
+    return date.toLocaleDateString(undefined, {
+      hour: "2-digit",
+      minute: "2-digit",
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+    });
+  };
+
   const shortNumber = (num: number) => {
     if (num >= 1000) {
       return (num / 1000).toFixed(1) + "k";
@@ -83,9 +94,16 @@ export default function Post({ post }: PostProps) {
               <div className="flex items-center gap-2 text-muted-foreground">
                 <span className="text-sm">@{post.username}</span>
                 <span className="text-xs">•</span>
-                <time className="text-sm">
-                  {timeAgo(new Date(post.created_at))}
-                </time>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <time className="text-sm">
+                      {timeAgo(new Date(post.created_at))}
+                    </time>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>{readableDate(new Date(post.created_at))}</p>
+                  </TooltipContent>
+                </Tooltip>
               </div>
             </div>
           </div>
