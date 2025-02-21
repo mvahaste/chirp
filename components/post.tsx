@@ -5,11 +5,11 @@ import {
   likePostAction,
   unlikePostAction,
 } from "@/app/actions";
-import { Button } from "./ui/button";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { LucideHeart, LucideMessageCircle, LucideTrash } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
+import { createClient } from "@/utils/supabase/client";
 
 interface PostProps {
   post: any;
@@ -18,6 +18,20 @@ interface PostProps {
 export default function Post({ post }: PostProps) {
   const [visible, setVisible] = useState(true);
   const [hasLiked, setHasLiked] = useState(post.has_liked);
+  const [isSignedIn, setIsSignedIn] = useState(false);
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      const supabase = createClient();
+      const user = await supabase.auth.getUser();
+
+      if (user.data.user) {
+        setIsSignedIn(true);
+      }
+    };
+
+    checkAuth();
+  }, []);
 
   const avatarFallback = (name: string) => {
     if (name.split(" ").length > 1) {
@@ -119,6 +133,10 @@ export default function Post({ post }: PostProps) {
           <button
             className={`${hasLiked ? "text-rose-500" : ""} group flex items-center gap-2 text-muted-foreground transition-colors hover:text-rose-500`}
             onClick={async () => {
+              if (!isSignedIn) {
+                return;
+              }
+
               // Update the UI optimistically
               setHasLiked(!hasLiked);
               post.likes_count += hasLiked ? -1 : 1;
@@ -142,7 +160,11 @@ export default function Post({ post }: PostProps) {
           </button>
           <button
             className="group flex items-center gap-2 text-muted-foreground transition-colors hover:text-sky-500"
-            onClick={() => {}}
+            onClick={() => {
+              if (!isSignedIn) {
+                return;
+              }
+            }}
           >
             <LucideMessageCircle className="h-4 w-4" />
             <span className="text-sm">{post.replies_count}</span>
