@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export default function HeaderNav() {
-  const [username, setUsername] = useState<string | null>(null);
+  const [username, setUsername] = useState<string>("");
 
   const pathname = usePathname();
 
@@ -27,20 +27,26 @@ export default function HeaderNav() {
     getUsername();
   }, []);
 
-  const links = {
-    "/": "Home",
-    "<USERNAME>": "Profile",
-  };
+  const links = [
+    {
+      path: "/",
+      label: "Home",
+    },
+    {
+      path: "/" + username,
+      label: "Profile",
+    },
+  ];
 
   return (
     <>
-      {Object.entries(links).map(([path, label]) => (
+      {links.map((link) => (
         <Link
-          key={path}
-          href={path == "<USERNAME>" ? `/${username}` : path}
-          className={pathname == path ? "font-semibold" : ""}
+          key={link.path}
+          href={link.path}
+          className={pathname == link.path ? "font-semibold" : ""}
         >
-          {label}
+          {link.label}
         </Link>
       ))}
     </>
