@@ -34,24 +34,23 @@ export default function Post({ post }: PostProps) {
     const minutes = seconds / 60;
     const hours = minutes / 60;
     const days = hours / 24;
-    const weeks = days / 7;
-    const months = weeks / 4;
-    const years = months / 12;
 
-    if (years >= 1) {
-      return Math.floor(years) + "y";
-    } else if (months >= 1) {
-      return Math.floor(months) + "mo";
-    } else if (weeks >= 1) {
-      return Math.floor(weeks) + "w";
-    } else if (days >= 1) {
-      return Math.floor(days) + "d";
-    } else if (hours >= 1) {
-      return Math.floor(hours) + "h";
-    } else if (minutes >= 1) {
-      return Math.floor(minutes) + "m";
-    } else {
+    if (seconds < 5) {
+      return "Just now";
+    } else if (seconds < 60) {
       return Math.floor(seconds) + "s";
+    } else if (minutes < 60) {
+      return Math.floor(minutes) + "m";
+    } else if (hours < 24) {
+      return Math.floor(hours) + "h";
+    } else if (days < 7) {
+      return Math.floor(days) + "d";
+    } else {
+      return date.toLocaleDateString(undefined, {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+      });
     }
   };
 
