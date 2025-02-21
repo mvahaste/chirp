@@ -9,7 +9,10 @@ export default async function ProfilePage({
 
   // Fetch user data from supabase
   const supabase = await createClient();
-  const result = await supabase.from("profiles").select().eq("username", username);
+  const result = await supabase
+    .from("profiles")
+    .select()
+    .eq("username", username);
 
   if (result.error) {
     return <div>Error fetching user data.</div>;
