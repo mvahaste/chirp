@@ -7,7 +7,12 @@ import {
 } from "@/app/actions";
 import { useEffect, useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
-import { LucideHeart, LucideMessageCircle, LucideTrash } from "lucide-react";
+import {
+  LucideBookmark,
+  LucideHeart,
+  LucideMessageCircle,
+  LucideTrash,
+} from "lucide-react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
 import { createClient } from "@/utils/supabase/client";
 import Link from "next/link";
@@ -19,6 +24,9 @@ interface PostProps {
 export default function Post({ post }: PostProps) {
   const [visible, setVisible] = useState(true);
   const [hasLiked, setHasLiked] = useState(post.has_liked);
+  const [hasBookmarked, setHasBookmarked] = useState(
+    post.has_bookmarked ?? false,
+  );
   const [isSignedIn, setIsSignedIn] = useState(false);
 
   useEffect(() => {
@@ -90,105 +98,199 @@ export default function Post({ post }: PostProps) {
   };
 
   return (
-    <div
-      className={`${visible ? "" : "hidden"} flex flex-col gap-4 rounded-lg border p-4`}
+    <article
+      key={post.id}
+      className={`${visible ? "" : "hidden"} rounded-xl border p-4`}
     >
-      {/* <pre key={post.id} className="rounded-md border p-3 text-xs"> */}
-      {/*   {JSON.stringify(post, null, 2)} */}
-      {/* </pre> */}
-      {/* Author info */}
-      <Link className="group flex items-start gap-3" href={"/" + post.username}>
-        <Avatar className="h-10 w-10">
-          <AvatarImage src={post.avatar} alt={post.username} />
-          <AvatarFallback>{avatarFallback(post.display_name)}</AvatarFallback>
-        </Avatar>
-        <div className="flex-1">
-          <div className="flex items-center justify-between">
-            <div>
-              <h2 className="text-sm font-medium decoration-1 group-hover:underline">
-                {post.display_name}
-              </h2>
-              <div className="flex items-center gap-2 text-muted-foreground">
-                <span className="text-sm">@{post.username}</span>
-                <span className="text-xs">•</span>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <time className="text-sm">
-                      {timeAgo(new Date(post.created_at))}
-                    </time>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>{readableDate(new Date(post.created_at))}</p>
-                  </TooltipContent>
-                </Tooltip>
-              </div>
-            </div>
+      <div className="flex gap-3">
+        <Link href={"/" + post.username} className="h-fit">
+          <Avatar className="h-10 w-10">
+            <AvatarImage
+              src="/placeholder.svg?height=40&width=40"
+              alt="User avatar"
+            />
+            <AvatarFallback>{avatarFallback(post.display_name)}</AvatarFallback>
+          </Avatar>
+        </Link>
+        <div className="flex-1 space-y-1">
+          <div className="flex items-center gap-2">
+            <Link
+              href={"/" + post.username}
+              className="font-semibold decoration-1 hover:underline"
+            >
+              {post.display_name}
+            </Link>
+            <Link
+              href={"/" + post.username}
+              className="text-muted-foreground decoration-1 hover:underline"
+            >
+              @{post.username}
+            </Link>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <span className="text-muted-foreground">
+                  · {timeAgo(new Date(post.created_at))}
+                </span>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>{readableDate(new Date(post.created_at))}</p>
+              </TooltipContent>
+            </Tooltip>
+          </div>
+          <p className="whitespace-pre text-base">{post.content}</p>
+          <div className="flex flex-row justify-between gap-4 pt-1">
+            {/* Like */}
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button
+                  className={`${hasLiked ? "text-rose-500" : ""} group flex items-center gap-2 text-muted-foreground transition-colors hover:text-rose-500`}
+                  onClick={async () => {
+                    // Do nothing if the user is not signed in
+                    if (!isSignedIn) {
+                      return;
+                    }
+
+                    // Remember the current state
+                    const currentState = hasLiked;
+
+                    // Optimistically update the UI
+                    if (hasLiked) {
+                      setHasLiked(false);
+                      post.likes_count -= 1;
+                    } else {
+                      setHasLiked(true);
+                      post.likes_count += 1;
+                    }
+
+                    // Update the database
+                    const result = currentState
+                      ? await unlikePostAction(post.id)
+                      : await likePostAction(post.id);
+
+                    if (!result) {
+                      // Revert to the previous state if the request fails
+                      setHasLiked(currentState);
+
+                      post.likes_count = currentState
+                        ? post.likes_count + 1
+                        : post.likes_count - 1;
+                    }
+                  }}
+                >
+                  <LucideHeart
+                    className={`${hasLiked ? "fill-rose-500" : ""} h-4 w-4 transition-colors`}
+                  />
+                  <span className="text-sm">{post.likes_count}</span>
+                </button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Like</p>
+              </TooltipContent>
+            </Tooltip>
+            {/* Reply */}
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button
+                  className="group flex items-center gap-2 text-muted-foreground transition-colors hover:text-sky-500"
+                  onClick={() => {
+                    // Do nothing if the user is not signed in
+                    if (!isSignedIn) {
+                      return;
+                    }
+                  }}
+                >
+                  <LucideMessageCircle className="h-4 w-4" />
+                  <span className="text-sm">{post.replies_count}</span>
+                </button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Reply</p>
+              </TooltipContent>
+            </Tooltip>
+            {/* Bookmark */}
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button
+                  className={`${hasBookmarked ? "text-green-500" : ""} group flex items-center gap-2 text-muted-foreground transition-colors hover:text-green-500`}
+                  onClick={async () => {
+                    // Do nothing if the user is not signed in
+                    if (!isSignedIn) {
+                      return;
+                    }
+
+                    // TODO: Implement bookmarking
+
+                    // Remember the current state
+                    const currentState = hasBookmarked;
+
+                    // Optimistically update the UI
+                    if (hasBookmarked) {
+                      setHasBookmarked(false);
+                      // post.bookmarks_count -= 1;
+                    } else {
+                      setHasBookmarked(true);
+                      // post.likes_count += 1;
+                    }
+
+                    // Update the database
+                    // const result = currentState
+                    //   ? await unbookmarkPostAction(post.id)
+                    //   : await bookmarkPostAction(post.id);
+
+                    // if (!result) {
+                    //   // Revert to the previous state if the request fails
+                    //   setHasBookmarked(currentState);
+                    //
+                    //   post.bookmarks_count = currentState
+                    //     ? post.bookmarks_count + 1
+                    //     : post.bookmarks_count - 1;
+                    // }
+                  }}
+                >
+                  <LucideBookmark
+                    className={`${hasBookmarked ? "fill-green-500" : ""} h-4 w-4 transition-colors`}
+                  />
+                  <span className="text-sm">{post.bookmarks_count ?? 0}</span>
+                </button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Bookmark</p>
+              </TooltipContent>
+            </Tooltip>
+            {/* Delete */}
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button
+                  className={`${post.is_author ? "" : "pointer-events-none opacity-0"} group flex items-center gap-2 text-muted-foreground transition-colors hover:text-red-500`}
+                  disabled={!post.is_author}
+                  onClick={async () => {
+                    // Do nothing if the user is not signed in
+                    if (!isSignedIn) {
+                      return;
+                    }
+
+                    // Optimistically update the UI
+                    setVisible(false);
+
+                    // Update the database
+                    const result = await deletePostAction(post.id);
+
+                    if (!result) {
+                      // Revert to the previous state if the request fails
+                      setVisible(true);
+                    }
+                  }}
+                >
+                  <LucideTrash className="h-4 w-4" />
+                </button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Delete</p>
+              </TooltipContent>
+            </Tooltip>
           </div>
         </div>
-      </Link>
-      {/* Content */}
-      <div className="text-sm">
-        <p className="whitespace-pre">{post.content}</p>
       </div>
-      {/* Interactions */}
-      <div className="flex flex-row gap-4">
-        <div className="flex items-center gap-6">
-          <button
-            className={`${hasLiked ? "text-rose-500" : ""} group flex items-center gap-2 text-muted-foreground transition-colors hover:text-rose-500`}
-            onClick={async () => {
-              if (!isSignedIn) {
-                return;
-              }
-
-              // Update the UI optimistically
-              setHasLiked(!hasLiked);
-              post.likes_count += hasLiked ? -1 : 1;
-
-              // Update the server
-              const result = hasLiked
-                ? await unlikePostAction(post.id)
-                : await likePostAction(post.id);
-
-              // If the server update fails, revert the UI
-              if (!result) {
-                setHasLiked(hasLiked);
-                post.likes_count += hasLiked ? 1 : -1;
-              }
-            }}
-          >
-            <LucideHeart
-              className={`${hasLiked ? "fill-rose-500" : ""} h-4 w-4 transition-colors`}
-            />
-            <span className="text-sm">{post.likes_count}</span>
-          </button>
-          <button
-            className="group flex items-center gap-2 text-muted-foreground transition-colors hover:text-sky-500"
-            onClick={() => {
-              if (!isSignedIn) {
-                return;
-              }
-            }}
-          >
-            <LucideMessageCircle className="h-4 w-4" />
-            <span className="text-sm">{post.replies_count}</span>
-          </button>
-        </div>
-        <div className="flex-grow" />
-        {post.is_author && (
-          <button
-            className="group flex items-center gap-2 text-muted-foreground transition-colors hover:text-red-500"
-            onClick={async () => {
-              const result = await deletePostAction(post.id);
-
-              if (result) {
-                setVisible(false);
-              }
-            }}
-          >
-            <LucideTrash className="h-4 w-4" />
-          </button>
-        )}
-      </div>
-    </div>
+    </article>
   );
 }
