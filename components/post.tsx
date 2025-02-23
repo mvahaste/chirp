@@ -80,13 +80,13 @@ export default function Post({ post }: PostProps) {
             </Link>
             <Link
               href={`/${post.username}`}
-              className="text-muted-foreground decoration-1 hover:underline"
+              className="text-sm text-muted-foreground decoration-1 hover:underline"
             >
               @{post.username}
             </Link>
             <Tooltip>
               <TooltipTrigger asChild>
-                <span className="text-muted-foreground">
+                <span className="text-sm text-muted-foreground">
                   · {timeAgo(new Date(post.created_at))}
                 </span>
               </TooltipTrigger>
