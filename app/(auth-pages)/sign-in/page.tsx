@@ -1,4 +1,5 @@
 import { signInAction } from "@/app/actions";
+import DemoUserSignIn from "@/components/demo-user-sign-in";
 import { FormMessage, Message } from "@/components/form-message";
 import { SubmitButton } from "@/components/submit-button";
 import { Input } from "@/components/ui/input";
@@ -8,7 +9,7 @@ import Link from "next/link";
 export default async function Login(props: { searchParams: Promise<Message> }) {
   const searchParams = await props.searchParams;
   return (
-    <form className="flex min-w-64 flex-1 flex-col">
+    <div className="flex min-w-64 flex-1 flex-col">
       <h1 className="text-2xl font-medium">Sign in</h1>
       <p className="text-sm text-foreground">
         Don't have an account?{" "}
@@ -16,7 +17,8 @@ export default async function Login(props: { searchParams: Promise<Message> }) {
           Sign up
         </Link>
       </p>
-      <div className="mt-8 flex flex-col gap-2 [&>input]:mb-3">
+      <DemoUserSignIn />
+      <form className="mt-8 flex flex-col gap-2 [&>input]:mb-3">
         <Label htmlFor="email">Email</Label>
         <Input
           name="email"
@@ -43,7 +45,7 @@ export default async function Login(props: { searchParams: Promise<Message> }) {
           Sign in
         </SubmitButton>
         <FormMessage message={searchParams} />
-      </div>
-    </form>
+      </form>
+    </div>
   );
 }
