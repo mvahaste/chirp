@@ -3,57 +3,38 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { createClient } from "@/utils/supabase/server";
-import {
-  LucideCalendarDays,
-  LucideHeart,
-  LucideMessageCircle,
-  LucideTrash,
-} from "lucide-react";
+import { LucideCalendarDays } from "lucide-react";
 
 export default async function ProfilePage({
   params,
 }: {
-  params: Promise<{ username: string }>;
+  params: { username: string };
 }) {
-  const username = (await params).username;
-
-  // Fetch user data from supabase
   const supabase = await createClient();
-  const { error, data } = await supabase
+  const { data: profile, error } = await supabase
     .from("profiles")
     .select()
-    .eq("username", username);
+    .eq("username", params.username)
+    .single();
 
-  if (error) {
-    return <div>Error fetching user data.</div>;
-  }
+  if (error || !profile)
+    return <div>{error ? "Error fetching user data." : "User not found."}</div>;
 
-  const profile = data && data.length > 0 ? data[0] : null;
+  const fetchPosts = async (filter: object) => {
+    const { data, error } = await supabase
+      .from("public_posts")
+      .select()
+      .match(filter);
+    return error ? [] : data;
+  };
 
-  if (!profile) {
-    return <div>User not found.</div>;
-  }
-
-  const { data: posts, error: postsError } = await supabase
-    .from("public_posts")
-    .select()
-    .eq("username", username)
-    .is("parent_id", null);
-
-  const { data: replies, error: repliesError } = await supabase
-    .from("public_posts")
-    .select()
-    .eq("username", username)
-    .not("parent_id", "is", null);
-
-  // Get likes from the supabase get_liked_posts_by_username function
-
-  const { data: likes, error: likesError } = await supabase.rpc(
-    "get_liked_posts_by_username",
-    {
-      p_username: username,
-    },
-  );
+  const [posts, replies, likes] = await Promise.all([
+    fetchPosts({ username: params.username, parent_id: null }),
+    fetchPosts({ username: params.username, parent_id: { neq: null } }),
+    supabase
+      .rpc("get_liked_posts_by_username", { p_username: params.username })
+      .then(({ data }) => data || []),
+  ]);
 
   return (
     <main className="w-full">
@@ -79,10 +60,6 @@ export default async function ProfilePage({
             <div className="mt-4 space-y-3">
               <p className="whitespace-pre text-base">{profile.bio}</p>
               <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
-                {/* <div className="flex items-center gap-1"> */}
-                {/*   <LucideMapPin className="h-4 w-4" /> */}
-                {/*   San Francisco, CA */}
-                {/* </div> */}
                 <div className="flex items-center gap-1">
                   <LucideCalendarDays className="h-4 w-4" />
                   Joined{" "}
@@ -90,16 +67,6 @@ export default async function ProfilePage({
                     month: "long",
                     year: "numeric",
                   })}
-                </div>
-              </div>
-              <div className="flex gap-4 text-sm">
-                <div className="flex items-center gap-1">
-                  <span className="font-semibold text-foreground">2,345</span>
-                  <span className="text-muted-foreground">Following</span>
-                </div>
-                <div className="flex items-center gap-1">
-                  <span className="font-semibold text-foreground">12.3K</span>
-                  <span className="text-muted-foreground">Followers</span>
                 </div>
               </div>
             </div>
@@ -110,58 +77,35 @@ export default async function ProfilePage({
       {/* Tabs */}
       <Tabs defaultValue="posts" className="mt-4">
         <TabsList className="h-auto w-full justify-start rounded-none border-b bg-transparent p-0">
-          <TabsTrigger
-            value="posts"
-            className="flex-1 rounded-none py-3 data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:bg-transparent"
-          >
-            Posts
-          </TabsTrigger>
-          <TabsTrigger
-            value="replies"
-            className="flex-1 rounded-none py-3 data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:bg-transparent"
-          >
-            Replies
-          </TabsTrigger>
-          <TabsTrigger
-            value="likes"
-            className="flex-1 rounded-none py-3 data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:bg-transparent"
-          >
-            Likes
-          </TabsTrigger>
+          {["posts", "replies", "likes"].map((tab) => (
+            <TabsTrigger
+              key={tab}
+              value={tab}
+              className="flex-1 rounded-none py-3 data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:bg-transparent"
+            >
+              {tab.charAt(0).toUpperCase() + tab.slice(1)}
+            </TabsTrigger>
+          ))}
         </TabsList>
-        <TabsContent value="posts" className="mt-6">
-          {posts?.length === 0 ? (
-            <div className="text-center text-muted-foreground">
-              No posts yet.
-            </div>
-          ) : (
-            <div className="flex flex-col gap-4">
-              {posts?.map((post) => <Post key={post.id} post={post} />)}
-            </div>
-          )}
-        </TabsContent>
-        <TabsContent value="replies" className="mt-6">
-          {replies?.length === 0 ? (
-            <div className="text-center text-muted-foreground">
-              No replies yet.
-            </div>
-          ) : (
-            <div className="flex flex-col gap-4">
-              {replies?.map((post) => <Post key={post.id} post={post} />)}
-            </div>
-          )}
-        </TabsContent>
-        <TabsContent value="likes" className="mt-6">
-          {likes?.length === 0 ? (
-            <div className="text-center text-muted-foreground">
-              No liked posts yet.
-            </div>
-          ) : (
-            <div className="flex flex-col gap-4">
-              {likes?.map((post: any) => <Post key={post.id} post={post} />)}
-            </div>
-          )}
-        </TabsContent>
+        {[
+          ["posts", posts],
+          ["replies", replies],
+          ["likes", likes],
+        ].map(([key, data]) => (
+          <TabsContent key={key} value={key} className="mt-6">
+            {data.length === 0 ? (
+              <div className="text-center text-muted-foreground">
+                No {key} yet.
+              </div>
+            ) : (
+              <div className="flex flex-col gap-4">
+                {data.map((post: any) => (
+                  <Post key={post.id} post={post} />
+                ))}
+              </div>
+            )}
+          </TabsContent>
+        ))}
       </Tabs>
     </main>
   );

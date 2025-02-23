@@ -4,8 +4,6 @@ import "./globals.css";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { LucideHome, LucideInfo, LucideSearch, LucideUser } from "lucide-react";
-import Link from "next/link";
 import MobileNavBar from "@/components/mobile-nav-bar";
 
 const defaultUrl = process.env.VERCEL_URL
