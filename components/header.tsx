@@ -5,7 +5,11 @@ import { EnvVarWarning } from "./env-var-warning";
 import HeaderAuth from "./header-auth";
 import HeaderNav from "./header-nav";
 
-export default function Header() {
+interface HeaderProps {
+  username?: string;
+}
+
+export default function Header({ username }: HeaderProps) {
   return (
     <header className="border-grid sticky top-0 z-50 flex h-16 w-full justify-center border-b border-b-foreground/10 bg-background/95 shadow-sm backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="flex w-full max-w-5xl items-center justify-between p-3 px-5 text-sm">
@@ -16,7 +20,7 @@ export default function Header() {
         </div>
         <div className="flex flex-row items-center gap-8">
           <div className="hidden flex-row items-center gap-8 sm:flex">
-            <HeaderNav />
+            <HeaderNav username={username} />
           </div>
           {!hasEnvVars ? <EnvVarWarning /> : <HeaderAuth />}
         </div>

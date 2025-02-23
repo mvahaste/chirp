@@ -1,23 +1,52 @@
-import { LucideHome, LucideInfo, LucideSearch, LucideUser } from "lucide-react";
-import Link from "next/link";
+"use client";
 
-export default function MobileNavBar() {
+import {
+  LucideBookmark,
+  LucideHome,
+  LucideInfo,
+  LucideSearch,
+  LucideUser,
+} from "lucide-react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+
+interface MobileNavBarProps {
+  username?: string;
+}
+
+export default function MobileNavBar({ username }: MobileNavBarProps) {
+  const pathname = usePathname();
+
   return (
-    <div className="sticky bottom-0 z-50 flex h-16 w-full justify-center border-t border-foreground/10 bg-background/95 shadow-sm backdrop-blur supports-[backdrop-filter]:bg-background/60 sm:hidden">
-      <div className="flex w-full max-w-5xl items-center justify-between p-3 px-8 text-sm">
-        <Link href="/" className="inline-flex items-center gap-3">
-          <LucideHome />
-        </Link>
-        <Link href="/search" className="inline-flex items-center gap-3">
-          <LucideSearch />
-        </Link>
-        <Link href="/profile" className="inline-flex items-center gap-3">
-          <LucideUser />
-        </Link>
-        <Link href="/about" className="inline-flex items-center gap-3">
-          <LucideInfo />
-        </Link>
-      </div>
+    <div className="sticky bottom-0 z-50 flex w-full bg-background/95 shadow-sm backdrop-blur supports-[backdrop-filter]:bg-background/60 sm:hidden">
+      {/* Home */}
+      <Link
+        href="/"
+        className={`${pathname == "/" ? "border-t-2 border-foreground" : "border-t border-foreground/10"} flex w-full items-center justify-center gap-3 py-4`}
+      >
+        <LucideHome />
+      </Link>
+      {/* Search */}
+      <Link
+        href="/search"
+        className={`${pathname == "/search" ? "border-t-2 border-foreground" : "border-t border-foreground/10"} flex w-full items-center justify-center gap-3 py-4`}
+      >
+        <LucideSearch />
+      </Link>
+      {/* Profile */}
+      <Link
+        href={"/" + (username || "login")}
+        className={`${pathname == "/" + username ? "border-t-2 border-foreground" : "border-t border-foreground/10"} flex w-full items-center justify-center gap-3 py-4`}
+      >
+        <LucideUser />
+      </Link>
+      {/* About */}
+      <Link
+        href="/about"
+        className={`${pathname == "/about" ? "border-t-2 border-foreground" : "border-t border-foreground/10"} flex w-full items-center justify-center gap-3 py-4`}
+      >
+        <LucideInfo />
+      </Link>
     </div>
   );
 }

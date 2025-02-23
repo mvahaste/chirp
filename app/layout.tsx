@@ -5,6 +5,7 @@ import Header from "@/components/header";
 import Footer from "@/components/footer";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import MobileNavBar from "@/components/mobile-nav-bar";
+import { createClient } from "@/utils/supabase/server";
 
 const defaultUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
@@ -21,11 +22,17 @@ const geistSans = Geist({
   subsets: ["latin"],
 });
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const supabase = await createClient();
+  const response = await supabase
+    .from("get_current_username")
+    .select("username");
+  const username = response.data?.[0]?.username;
+
   return (
     <html lang="en" className={geistSans.className} suppressHydrationWarning>
       <body className="bg-background text-foreground">
@@ -38,13 +45,13 @@ export default function RootLayout({
           <TooltipProvider>
             <main className="flex min-h-screen flex-col items-center">
               <div className="flex w-full flex-1 flex-col items-center">
-                <Header />
+                <Header username={username} />
                 <div className="flex w-full max-w-lg flex-grow flex-col p-5">
                   {children}
                 </div>
               </div>
               <Footer />
-              <MobileNavBar />
+              <MobileNavBar username={username} />
             </main>
           </TooltipProvider>
         </ThemeProvider>
