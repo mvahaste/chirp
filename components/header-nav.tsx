@@ -39,9 +39,12 @@ export default function HeaderNav() {
         Search
       </Link>
       <Link
-        href={"/" + (username ? username : "!!!")}
+        href="/profile"
         className={
-          pathname == "/" + (username ? username : "!!!") ? "font-semibold" : ""
+          pathname == "/profile" ||
+          pathname == "/" + (username ? username : "!!!")
+            ? "font-semibold"
+            : ""
         }
       >
         Profile

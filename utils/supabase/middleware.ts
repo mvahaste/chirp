@@ -44,6 +44,24 @@ export const updateSession = async (request: NextRequest) => {
       return NextResponse.redirect(new URL("/sign-in", request.url));
     }
 
+    // redirect /profile to /sign-in if not logged in, else redirect to /{username}
+    if (request.nextUrl.pathname === "/profile" && user.error) {
+      return NextResponse.redirect(new URL("/sign-in", request.url));
+    } else if (request.nextUrl.pathname === "/profile" && !user.error) {
+      // fetch username from profiles
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("username")
+        .eq("id", user.data.user.id)
+        .single();
+
+      if (error) {
+        return NextResponse.error();
+      }
+
+      return NextResponse.redirect(new URL(`/${data.username}`, request.url));
+    }
+
     // if (request.nextUrl.pathname === "/" && !user.error) {
     //   return NextResponse.redirect(new URL("/protected", request.url));
     // }
