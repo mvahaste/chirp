@@ -18,7 +18,6 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "./ui/dialog";
 import NewPostForm from "./new-post-form";
 
@@ -34,12 +33,23 @@ export default function Post({ post }: PostProps) {
     post.has_bookmarked ?? false,
   );
   const [isSignedIn, setIsSignedIn] = useState(false);
+  const [parentPost, setParentPost] = useState<any | null>(null);
 
   useEffect(() => {
     (async () => {
       const supabase = createClient();
       const { data: auth } = await supabase.auth.getSession();
       setIsSignedIn(!!auth.session?.user);
+
+      if (post.parent_post_id) {
+        const { data: parentPost } = await supabase
+          .from("post_feed")
+          .select("display_name, username")
+          .eq("post_id", post.parent_post_id)
+          .single();
+
+        setParentPost(parentPost);
+      }
     })();
   }, []);
 
@@ -119,6 +129,14 @@ export default function Post({ post }: PostProps) {
               </TooltipContent>
             </Tooltip>
           </div>
+          {post.parent_post_id && (
+            <p className="text-sm text-muted-foreground">
+              Replying to{" "}
+              <Link href={"/" + post.parent_post_username}>
+                @{post.parent_post_username}
+              </Link>
+            </p>
+          )}
           <p className="whitespace-pre-wrap break-all text-base">
             {post.content}
           </p>
