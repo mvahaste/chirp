@@ -13,8 +13,14 @@ export default function Home() {
   const [posts, setPosts] = useState<any[] | null>(null);
   const [input, setInput] = useState("");
   const supabase = createClient();
+  const [isSignedIn, setIsSignedIn] = useState(false);
 
   useEffect(() => {
+    (async () => {
+      const { data } = await createClient().auth.getUser();
+      setIsSignedIn(!!data.user);
+    })();
+
     const getPosts = async () => {
       const { data } = await supabase.from("public_posts").select();
       console.log(data);
@@ -27,40 +33,42 @@ export default function Home() {
 
   return (
     <main className="flex w-full flex-col gap-4">
-      <form className="flex flex-col gap-2">
-        <AutosizeTextarea
-          className="resize-none"
-          name="content"
-          placeholder="Post something..."
-          onChange={(e) => setInput(e.target.value)}
-          required
-        />
-        <div className="flex gap-2">
-          <SubmitButton
-            pendingText="Posting..."
-            formAction={newPostAction}
-            disabled={input.length > 320}
-          >
-            Post
-          </SubmitButton>
-          <div className="flex-grow" />
-          <Button
-            className="gap-2"
-            variant="outline"
-            onClick={(e) => {
-              e.preventDefault();
-            }}
-          >
-            <LucideImagePlus />
-            Image
-          </Button>
-          <div
-            className={`${input.length > 320 ? "border-destructive text-destructive" : ""} grid items-center rounded-md border px-4 text-sm`}
-          >
-            {input.length} / 320
+      {isSignedIn && (
+        <form className="flex flex-col gap-2">
+          <AutosizeTextarea
+            className="resize-none"
+            name="content"
+            placeholder="Post something..."
+            onChange={(e) => setInput(e.target.value)}
+            required
+          />
+          <div className="flex gap-2">
+            <SubmitButton
+              pendingText="Posting..."
+              formAction={newPostAction}
+              disabled={input.length > 320}
+            >
+              Post
+            </SubmitButton>
+            <div className="flex-grow" />
+            <Button
+              className="gap-2"
+              variant="outline"
+              onClick={(e) => {
+                e.preventDefault();
+              }}
+            >
+              <LucideImagePlus />
+              Image
+            </Button>
+            <div
+              className={`${input.length > 320 ? "border-destructive text-destructive" : ""} grid items-center rounded-md border px-4 text-sm`}
+            >
+              {input.length} / 320
+            </div>
           </div>
-        </div>
-      </form>
+        </form>
+      )}
       <div className="flex flex-col gap-4">
         {posts?.map((post) => <Post key={post.id} post={post} />)}
       </div>

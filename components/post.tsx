@@ -9,12 +9,7 @@ import {
   unlikePostAction,
 } from "@/app/actions";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
-import {
-  LucideBookmark,
-  LucideHeart,
-  LucideMessageCircle,
-  LucideTrash,
-} from "lucide-react";
+import { LucideHeart, LucideMessageCircle, LucideTrash } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
 import { avatarFallback, readableDate, timeAgo } from "@/lib/utils";
 
