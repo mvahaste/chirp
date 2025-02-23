@@ -140,6 +140,11 @@ export const signOutAction = async () => {
 export const newPostAction = async (formData: FormData) => {
   const content = formData.get("content") as string;
   const supabase = await createClient();
+
+  if (content.length > 160) {
+    return encodedRedirect("error", "/", "Post is too long");
+  }
+
   const { error } = await supabase.from("posts").insert([{ content }]);
 
   if (error) {
