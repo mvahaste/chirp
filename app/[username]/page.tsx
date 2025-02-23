@@ -50,7 +50,7 @@ export default async function ProfilePage({
             <FollowEditButton
               user_id={profile.id}
               is_self={profile.is_self}
-              is_following={profile.is_following_auth_user}
+              is_following={profile.is_auth_user_following}
             />
           )}
           <div className="pb-4 pt-20">
@@ -62,7 +62,7 @@ export default async function ProfilePage({
                 {profile && (
                   <p className="flex items-center gap-2 text-muted-foreground">
                     @{profile.username}{" "}
-                    {profile.is_following_me && (
+                    {profile.is_following_auth_user && (
                       <span className="mt-0.5 rounded bg-muted px-1.5 py-0.5 text-xs">
                         Follows you
                       </span>
