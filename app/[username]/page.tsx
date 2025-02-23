@@ -69,6 +69,16 @@ export default async function ProfilePage({
                   })}
                 </div>
               </div>
+              <div className="flex gap-4 text-sm">
+                <div className="flex items-center gap-1">
+                  <span className="font-semibold text-foreground">2,345</span>
+                  <span className="text-muted-foreground">Following</span>
+                </div>
+                <div className="flex items-center gap-1">
+                  <span className="font-semibold text-foreground">12.3K</span>
+                  <span className="text-muted-foreground">Followers</span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
