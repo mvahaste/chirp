@@ -39,7 +39,7 @@ export default function Home() {
           <SubmitButton
             pendingText="Posting..."
             formAction={newPostAction}
-            disabled={input.length > 160}
+            disabled={input.length > 320}
           >
             Post
           </SubmitButton>
@@ -55,9 +55,9 @@ export default function Home() {
             Image
           </Button>
           <div
-            className={`${input.length > 160 ? "border-destructive text-destructive" : ""} grid items-center rounded-md border px-4 text-sm`}
+            className={`${input.length > 320 ? "border-destructive text-destructive" : ""} grid items-center rounded-md border px-4 text-sm`}
           >
-            {input.length} / 160
+            {input.length} / 320
           </div>
         </div>
       </form>

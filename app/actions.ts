@@ -141,7 +141,7 @@ export const newPostAction = async (formData: FormData) => {
   const content = formData.get("content") as string;
   const supabase = await createClient();
 
-  if (content.length > 160) {
+  if (content.length > 320) {
     return encodedRedirect("error", "/", "Post is too long");
   }
 

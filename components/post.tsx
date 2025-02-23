@@ -59,7 +59,7 @@ export default function Post({ post }: PostProps) {
   return (
     <article
       key={post.id}
-      className={`${visible ? "" : "hidden"} rounded-xl border p-4`}
+      className={`${visible ? "" : "hidden"} overflow-hidden rounded-xl border p-4`}
     >
       <div className="flex gap-3">
         <Link href={`/${post.username}`} className="h-fit">
@@ -96,7 +96,9 @@ export default function Post({ post }: PostProps) {
               </TooltipContent>
             </Tooltip>
           </div>
-          <p className="whitespace-pre text-base">{post.content}</p>
+          <p className="whitespace-pre-wrap break-all text-base">
+            {post.content}
+          </p>
           {post.image && (
             <img
               src={post.image}
