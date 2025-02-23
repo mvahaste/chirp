@@ -1,3 +1,4 @@
+import Post from "@/components/post";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -5,7 +6,6 @@ import { createClient } from "@/utils/supabase/server";
 import {
   LucideCalendarDays,
   LucideHeart,
-  LucideMapPin,
   LucideMessageCircle,
   LucideTrash,
 } from "lucide-react";
@@ -34,20 +34,29 @@ export default async function ProfilePage({
     return <div>User not found.</div>;
   }
 
-  const posts = await supabase
+  const { data: posts, error: postsError } = await supabase
     .from("public_posts")
     .select()
     .eq("username", username)
     .is("parent_id", null);
 
-  const replies = await supabase
+  const { data: replies, error: repliesError } = await supabase
     .from("public_posts")
     .select()
     .eq("username", username)
     .not("parent_id", "is", null);
 
+  // Get likes from the supabase get_liked_posts_by_username function
+
+  const { data: likes, error: likesError } = await supabase.rpc(
+    "get_liked_posts_by_username",
+    {
+      p_username: username,
+    },
+  );
+
   return (
-    <main className="mx-auto max-w-2xl">
+    <main className="w-full">
       {/* Profile Header */}
       <div className="space-y-4">
         <div className="h-32 rounded-xl bg-muted" />
@@ -119,76 +128,41 @@ export default async function ProfilePage({
           >
             Likes
           </TabsTrigger>
-          <TabsTrigger
-            value="bookmarks"
-            className="flex-1 rounded-none py-3 data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:bg-transparent"
-          >
-            Bookmarks
-          </TabsTrigger>
         </TabsList>
         <TabsContent value="posts" className="mt-6">
-          <PostList />
+          {posts?.length === 0 ? (
+            <div className="text-center text-muted-foreground">
+              No posts yet.
+            </div>
+          ) : (
+            <div className="flex flex-col gap-4">
+              {posts?.map((post) => <Post key={post.id} post={post} />)}
+            </div>
+          )}
         </TabsContent>
         <TabsContent value="replies" className="mt-6">
-          <PostList />
+          {replies?.length === 0 ? (
+            <div className="text-center text-muted-foreground">
+              No replies yet.
+            </div>
+          ) : (
+            <div className="flex flex-col gap-4">
+              {replies?.map((post) => <Post key={post.id} post={post} />)}
+            </div>
+          )}
         </TabsContent>
         <TabsContent value="likes" className="mt-6">
-          <PostList />
-        </TabsContent>
-        <TabsContent value="bookmarks" className="mt-6">
-          <PostList />
+          {likes?.length === 0 ? (
+            <div className="text-center text-muted-foreground">
+              No liked posts yet.
+            </div>
+          ) : (
+            <div className="flex flex-col gap-4">
+              {likes?.map((post: any) => <Post key={post.id} post={post} />)}
+            </div>
+          )}
         </TabsContent>
       </Tabs>
     </main>
-  );
-}
-
-function PostList() {
-  return (
-    <div className="space-y-4">
-      {[1, 2, 3].map((post) => (
-        <article key={post} className="rounded-xl border p-4">
-          <div className="flex gap-3">
-            <Avatar className="h-10 w-10">
-              <AvatarImage
-                src="/placeholder.svg?height=40&width=40"
-                alt="User avatar"
-              />
-              <AvatarFallback>JD</AvatarFallback>
-            </Avatar>
-            <div className="flex-1 space-y-1">
-              <div className="flex items-center gap-2">
-                <span className="font-semibold">John Doe</span>
-                <span className="text-muted-foreground">@johndoe</span>
-                <span className="text-muted-foreground">· 2h</span>
-              </div>
-              <p className="text-base">
-                Just deployed my latest project using @vercel! The deployment
-                experience is absolutely seamless. 🚀
-              </p>
-              <div className="flex flex-row justify-between gap-4 pt-1">
-                <button
-                  className={`${false ? "text-rose-500" : ""} group flex items-center gap-2 text-muted-foreground transition-colors hover:text-rose-500`}
-                >
-                  <LucideHeart
-                    className={`${false ? "fill-rose-500" : ""} h-4 w-4 transition-colors`}
-                  />
-                  <span className="text-sm">{0}</span>
-                </button>
-                <button className="group flex items-center gap-2 text-muted-foreground transition-colors hover:text-sky-500">
-                  <LucideMessageCircle className="h-4 w-4" />
-                  <span className="text-sm">{0}</span>
-                </button>
-                {true && (
-                  <button className="group flex items-center gap-2 text-muted-foreground transition-colors hover:text-red-500">
-                    <LucideTrash className="h-4 w-4" />
-                  </button>
-                )}
-              </div>
-            </div>
-          </div>
-        </article>
-      ))}
-    </div>
   );
 }
