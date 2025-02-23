@@ -74,7 +74,7 @@ export default function Post({ post }: PostProps) {
           <div className="flex items-center gap-2">
             <Link
               href={`/${post.username}`}
-              className="font-semibold decoration-1 hover:underline"
+              className="font-medium decoration-1 hover:underline"
             >
               {post.display_name}
             </Link>

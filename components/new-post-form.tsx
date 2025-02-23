@@ -11,7 +11,7 @@ export default function NewPostForm() {
   return (
     <form className="flex flex-col gap-2">
       <AutosizeTextarea
-        className="resize-none"
+        className="resize-none rounded-xl"
         name="content"
         placeholder="Post something..."
         onChange={(e) => setContent(e.target.value)}
@@ -19,6 +19,7 @@ export default function NewPostForm() {
       />
       <div className="flex gap-2">
         <SubmitButton
+          className="rounded-full"
           pendingText="Posting..."
           formAction={newPostAction}
           disabled={content.length > 320}
@@ -27,7 +28,7 @@ export default function NewPostForm() {
         </SubmitButton>
         <div className="flex-grow" />
         <Button
-          className="gap-2"
+          className="gap-2 rounded-full"
           variant="outline"
           onClick={(e) => {
             e.preventDefault();
@@ -37,7 +38,7 @@ export default function NewPostForm() {
           Image
         </Button>
         <div
-          className={`${content.length > 320 ? "border-destructive text-destructive" : ""} grid items-center rounded-md border px-4 text-sm`}
+          className={`${content.length > 320 ? "border-destructive text-destructive" : ""} grid items-center rounded-full border px-4 text-sm`}
         >
           {content.length} / 320
         </div>

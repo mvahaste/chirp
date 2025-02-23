@@ -56,7 +56,7 @@ export default function FollowEditButton({
 
   return (
     <Button
-      className="absolute right-0"
+      className="absolute right-0 rounded-full"
       variant="outline"
       onClick={() => {
         if (is_self) {
