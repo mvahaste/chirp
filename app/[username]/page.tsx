@@ -12,7 +12,7 @@ export default async function ProfilePage({
 }) {
   const supabase = await createClient();
   const { data: profile, error } = await supabase
-    .from("profiles")
+    .from("public_profiles")
     .select()
     .eq("username", params.username)
     .single();
@@ -36,6 +36,18 @@ export default async function ProfilePage({
       .then(({ data }) => data || []),
   ]);
 
+  const followEditText = () => {
+    if (profile.is_self) {
+      return "Edit Profile";
+    }
+
+    if (profile.is_following) {
+      return "Following";
+    } else {
+      return "Follow";
+    }
+  };
+
   return (
     <main className="w-full">
       {/* Profile Header */}
@@ -53,9 +65,27 @@ export default async function ProfilePage({
             <div className="flex items-start justify-between">
               <div className="space-y-1">
                 <h1 className="text-2xl font-bold">{profile.display_name}</h1>
-                <p className="text-muted-foreground">@{profile.username}</p>
+                <p className="flex items-center gap-2 text-muted-foreground">
+                  @{profile.username}{" "}
+                  {profile.is_following_me && (
+                    <span className="mt-0.5 rounded bg-muted px-1.5 py-0.5 text-xs">
+                      Follows you
+                    </span>
+                  )}
+                </p>
               </div>
-              <Button variant="outline">Edit profile</Button>
+              <Button
+                variant="outline"
+                onClick={() => {
+                  if (profile.is_self) {
+                    // Edit profile
+                  } else {
+                    // Follow/unfollow
+                  }
+                }}
+              >
+                {followEditText()}
+              </Button>
             </div>
             <div className="mt-4 space-y-3">
               <p className="whitespace-pre text-base">{profile.bio}</p>
@@ -71,11 +101,15 @@ export default async function ProfilePage({
               </div>
               <div className="flex gap-4 text-sm">
                 <div className="flex items-center gap-1">
-                  <span className="font-semibold text-foreground">2,345</span>
+                  <span className="font-semibold text-foreground">
+                    {profile.following_count}
+                  </span>
                   <span className="text-muted-foreground">Following</span>
                 </div>
                 <div className="flex items-center gap-1">
-                  <span className="font-semibold text-foreground">12.3K</span>
+                  <span className="font-semibold text-foreground">
+                    {profile.followers_count}
+                  </span>
                   <span className="text-muted-foreground">Followers</span>
                 </div>
               </div>
