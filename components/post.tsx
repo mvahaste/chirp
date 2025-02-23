@@ -36,12 +36,12 @@ export default function Post({ post }: PostProps) {
     if (!isSignedIn) return;
     const prevLiked = hasLiked;
     setHasLiked(!prevLiked);
-    post.likes_count += prevLiked ? -1 : 1;
+    post.like_count += prevLiked ? -1 : 1;
     if (
       !(await (prevLiked ? unlikePostAction(post.id) : likePostAction(post.id)))
     ) {
       setHasLiked(prevLiked);
-      post.likes_count += prevLiked ? 1 : -1;
+      post.like_count += prevLiked ? 1 : -1;
     }
   };
 
@@ -111,7 +111,7 @@ export default function Post({ post }: PostProps) {
                   <LucideHeart
                     className={`h-4 w-4 transition-colors ${hasLiked ? "fill-rose-500" : ""}`}
                   />
-                  <span className="text-sm">{post.likes_count}</span>
+                  <span className="text-sm">{post.like_count}</span>
                 </button>
               </TooltipTrigger>
               <TooltipContent>
@@ -122,7 +122,7 @@ export default function Post({ post }: PostProps) {
               <TooltipTrigger asChild>
                 <button className="group flex items-center gap-2 text-muted-foreground transition-colors hover:text-sky-500">
                   <LucideMessageCircle className="h-4 w-4" />
-                  <span className="text-sm">{post.replies_count}</span>
+                  <span className="text-sm">{post.reply_count}</span>
                 </button>
               </TooltipTrigger>
               <TooltipContent>
