@@ -111,9 +111,10 @@ export default function PostsFeed({
       {isLoading && (
         <>
           <Skeleton className="h-28 w-full rounded-lg" />
-          <Skeleton className="h-28 w-full rounded-lg opacity-75" />
-          <Skeleton className="h-28 w-full rounded-lg opacity-50" />
-          <Skeleton className="h-28 w-full rounded-lg opacity-25" />
+          <Skeleton className="h-28 w-full rounded-lg opacity-80" />
+          <Skeleton className="h-28 w-full rounded-lg opacity-60" />
+          <Skeleton className="h-28 w-full rounded-lg opacity-40" />
+          <Skeleton className="h-28 w-full rounded-lg opacity-20" />
         </>
       )}
     </div>

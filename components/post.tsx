@@ -27,8 +27,9 @@ export default function Post({ post }: PostProps) {
 
   useEffect(() => {
     (async () => {
-      const { data } = await createClient().auth.getUser();
-      setIsSignedIn(!!data.user);
+      const supabase = createClient();
+      const { data: auth } = await supabase.auth.getSession();
+      setIsSignedIn(!!auth.session?.user);
     })();
   }, []);
 
@@ -38,7 +39,9 @@ export default function Post({ post }: PostProps) {
     setHasLiked(!prevLiked);
     post.like_count += prevLiked ? -1 : 1;
     if (
-      !(await (prevLiked ? unlikePostAction(post.id) : likePostAction(post.id)))
+      !(await (prevLiked
+        ? unlikePostAction(post.post_id)
+        : likePostAction(post.post_id)))
     ) {
       setHasLiked(prevLiked);
       post.like_count += prevLiked ? 1 : -1;
@@ -47,13 +50,14 @@ export default function Post({ post }: PostProps) {
 
   const handleDelete = async () => {
     if (!isSignedIn) return;
+
     setVisible(false);
-    if (!(await deletePostAction(post.id))) setVisible(true);
+
+    if (!(await deletePostAction(post.post_id))) setVisible(true);
   };
 
   return (
     <article
-      key={post.id}
       className={`${visible ? "" : "hidden"} overflow-hidden rounded-xl border p-4`}
     >
       <div className="flex gap-3">
