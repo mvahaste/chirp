@@ -193,3 +193,32 @@ export const unlikePostAction = async (id: string) => {
 
   return true;
 };
+
+export const followUserAction = async (id: string) => {
+  const supabase = await createClient();
+  const { error } = await supabase
+    .from("follows")
+    .insert([{ following_id: id }]);
+
+  if (error) {
+    console.error(error.message);
+    return false;
+  }
+
+  return true;
+};
+
+export const unfollowUserAction = async (id: string) => {
+  const supabase = await createClient();
+  const { error } = await supabase
+    .from("follows")
+    .delete()
+    .match({ following_id: id });
+
+  if (error) {
+    console.error(error.message);
+    return false;
+  }
+
+  return true;
+};

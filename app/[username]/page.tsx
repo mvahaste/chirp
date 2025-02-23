@@ -1,6 +1,6 @@
+import FollowEditButton from "@/components/follow-edit-button";
 import PostsFeed from "@/components/posts-feed";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { avatarFallback } from "@/lib/utils";
 import { createClient } from "@/utils/supabase/server";
@@ -16,7 +16,7 @@ export default async function ProfilePage({
   const username = (await params).username;
 
   const { data, error } = await supabase
-    .from("profiles")
+    .from("profile_details")
     .select()
     .eq("username", username);
 
@@ -30,18 +30,6 @@ export default async function ProfilePage({
   }
 
   const profile = data[0];
-
-  const followEditText = () => {
-    if (profile.is_self) {
-      return "Edit Profile";
-    }
-
-    if (profile.is_following) {
-      return "Following";
-    } else {
-      return "Follow";
-    }
-  };
 
   return (
     <main className="w-full">
@@ -59,19 +47,11 @@ export default async function ProfilePage({
             </AvatarFallback>
           </Avatar>
           {profile && (
-            <Button
-              className="absolute right-0"
-              variant="outline"
-              // onClick={() => {
-              //   if (profile.is_self) {
-              //     // Edit profile
-              //   } else {
-              //     // Follow/unfollow
-              //   }
-              // }}
-            >
-              {followEditText()}
-            </Button>
+            <FollowEditButton
+              user_id={profile.id}
+              is_self={profile.is_self}
+              is_following={profile.is_following_auth_user}
+            />
           )}
           <div className="pb-4 pt-20">
             <div className="flex items-start justify-between">
@@ -92,8 +72,10 @@ export default async function ProfilePage({
               </div>
             </div>
             {profile ? (
-              <div className="mt-4 space-y-3">
-                <p className="whitespace-pre text-base">{profile.bio}</p>
+              <div className="mt-2 space-y-3 overflow-hidden">
+                {profile.bio && (
+                  <p className="whitespace-pre-wrap text-sm">{profile.bio}</p>
+                )}
                 <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
                   <div className="flex items-center gap-1">
                     <LucideCalendarDays className="h-4 w-4" />
