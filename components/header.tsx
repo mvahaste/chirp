@@ -4,6 +4,7 @@ import Link from "next/link";
 import { EnvVarWarning } from "./env-var-warning";
 import HeaderAuth from "./header-auth";
 import HeaderNav from "./header-nav";
+import { ThemeSwitcher } from "./theme-switcher";
 
 interface HeaderProps {
   username?: string;
@@ -18,10 +19,11 @@ export default function Header({ username }: HeaderProps) {
             <Bird /> Chirp
           </Link>
         </div>
-        <div className="flex flex-row items-center gap-8">
-          <div className="hidden flex-row items-center gap-8 sm:flex">
+        <div className="flex flex-row items-center gap-4">
+          <div className="mr-4 hidden flex-row items-center gap-8 sm:flex">
             <HeaderNav username={username} />
           </div>
+          <ThemeSwitcher />
           {!hasEnvVars ? <EnvVarWarning /> : <HeaderAuth />}
         </div>
       </div>
