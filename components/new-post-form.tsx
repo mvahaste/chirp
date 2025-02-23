@@ -45,7 +45,7 @@ export default function NewPostForm({ type, parentPostId }: NewPostFormProps) {
             e.preventDefault();
           }}
         >
-          <LucideImagePlus />
+          <LucideImagePlus className="w-5" />
           Image
         </Button>
         <div
