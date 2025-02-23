@@ -15,7 +15,9 @@ export default function Header() {
           </Link>
         </div>
         <div className="flex flex-row items-center gap-8">
-          <HeaderNav />
+          <div className="hidden flex-row items-center gap-8 sm:flex">
+            <HeaderNav />
+          </div>
           {!hasEnvVars ? <EnvVarWarning /> : <HeaderAuth />}
         </div>
       </div>

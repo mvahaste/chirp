@@ -27,28 +27,31 @@ export default function HeaderNav() {
     getUsername();
   }, []);
 
-  const links = [
-    {
-      path: "/",
-      label: "Home",
-    },
-    {
-      path: username ? "/" + username : "",
-      label: "Profile",
-    },
-  ];
-
   return (
     <>
-      {links.map((link) => (
-        <Link
-          key={link.label}
-          href={link.path}
-          className={pathname == link.path ? "font-semibold" : ""}
-        >
-          {link.label}
-        </Link>
-      ))}
+      <Link href="/" className={pathname == "/" ? "font-semibold" : ""}>
+        Home
+      </Link>
+      <Link
+        href="/search"
+        className={pathname == "/search" ? "font-semibold" : ""}
+      >
+        Search
+      </Link>
+      <Link
+        href={"/" + (username ? username : "!!!")}
+        className={
+          pathname == "/" + (username ? username : "!!!") ? "font-semibold" : ""
+        }
+      >
+        Profile
+      </Link>
+      <Link
+        href="/about"
+        className={pathname == "/about" ? "font-semibold" : ""}
+      >
+        About
+      </Link>
     </>
   );
 }
