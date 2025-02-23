@@ -20,21 +20,26 @@ export default async function ProfilePage({
   if (error || !profile)
     return <div>{error ? "Error fetching user data." : "User not found."}</div>;
 
-  const fetchPosts = async (filter: object) => {
-    const { data, error } = await supabase
-      .from("public_posts")
-      .select()
-      .match(filter);
-    return error ? [] : data;
-  };
+  const { data: posts, error: postsError } = await supabase
+    .from("public_posts")
+    .select()
+    .eq("username", params.username)
+    .is("parent_id", null);
 
-  const [posts, replies, likes] = await Promise.all([
-    fetchPosts({ username: params.username, parent_id: null }),
-    fetchPosts({ username: params.username, parent_id: { neq: null } }),
-    supabase
-      .rpc("get_liked_posts_by_username", { p_username: params.username })
-      .then(({ data }) => data || []),
-  ]);
+  const { data: replies, error: repliesError } = await supabase
+    .from("public_posts")
+    .select()
+    .eq("username", params.username)
+    .not("parent_id", "is", null);
+
+  // Get likes from the supabase get_liked_posts_by_username function
+
+  const { data: likes, error: likesError } = await supabase.rpc(
+    "get_liked_posts_by_username",
+    {
+      p_username: params.username,
+    },
+  );
 
   const followEditText = () => {
     if (profile.is_self) {
@@ -76,13 +81,13 @@ export default async function ProfilePage({
               </div>
               <Button
                 variant="outline"
-                onClick={() => {
-                  if (profile.is_self) {
-                    // Edit profile
-                  } else {
-                    // Follow/unfollow
-                  }
-                }}
+                // onClick={() => {
+                //   if (profile.is_self) {
+                //     // Edit profile
+                //   } else {
+                //     // Follow/unfollow
+                //   }
+                // }}
               >
                 {followEditText()}
               </Button>
