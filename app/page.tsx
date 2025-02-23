@@ -20,7 +20,7 @@ export default function Home() {
 
   return (
     <main className="flex w-full flex-col gap-2">
-      {isSignedIn && <NewPostForm />}
+      {isSignedIn && <NewPostForm type="post" />}
       <Tabs defaultValue="all">
         <TabsList className="mb-4 h-auto w-full rounded-none border-b bg-transparent p-0">
           <TabsTrigger

@@ -49,7 +49,10 @@ export default function PostsFeed({
       let response;
 
       if (type == "all") {
-        response = await supabase.from("post_feed").select("*");
+        response = await supabase
+          .from("post_feed")
+          .select("*")
+          .is("parent_post_id", null);
       } else if (type == "following") {
         response = await supabase.from("followed_post_feed").select("*");
       } else if (type == "replies") {

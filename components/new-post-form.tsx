@@ -5,7 +5,12 @@ import { Button } from "./ui/button";
 import { LucideImagePlus } from "lucide-react";
 import { useState } from "react";
 
-export default function NewPostForm() {
+interface NewPostFormProps {
+  type: "post" | "reply";
+  parentPostId?: string;
+}
+
+export default function NewPostForm({ type, parentPostId }: NewPostFormProps) {
   const [content, setContent] = useState("");
 
   return (
@@ -13,9 +18,15 @@ export default function NewPostForm() {
       <AutosizeTextarea
         className="resize-none rounded-xl"
         name="content"
-        placeholder="Post something..."
+        placeholder="What's on your mind?"
         onChange={(e) => setContent(e.target.value)}
         required
+      />
+      <input
+        type="hidden"
+        name="parent_post_id"
+        value={parentPostId}
+        readOnly
       />
       <div className="flex gap-2">
         <SubmitButton
@@ -24,7 +35,7 @@ export default function NewPostForm() {
           formAction={newPostAction}
           disabled={content.length > 320}
         >
-          Post
+          {type == "post" ? "Post" : "Reply"}
         </SubmitButton>
         <div className="flex-grow" />
         <Button

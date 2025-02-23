@@ -12,13 +12,23 @@ import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { LucideHeart, LucideMessageCircle, LucideTrash } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
 import { avatarFallback, readableDate, timeAgo } from "@/lib/utils";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "./ui/dialog";
+import NewPostForm from "./new-post-form";
 
 interface PostProps {
   post: any;
 }
 
 export default function Post({ post }: PostProps) {
-  const [visible, setVisible] = useState(true);
+  const [isVisible, setIsVisible] = useState(true);
+  const [isReplyVisible, setIsReplyVisible] = useState(false);
   const [hasLiked, setHasLiked] = useState(post.has_liked);
   const [hasBookmarked, setHasBookmarked] = useState(
     post.has_bookmarked ?? false,
@@ -51,15 +61,29 @@ export default function Post({ post }: PostProps) {
   const handleDelete = async () => {
     if (!isSignedIn) return;
 
-    setVisible(false);
+    setIsVisible(false);
 
-    if (!(await deletePostAction(post.post_id))) setVisible(true);
+    if (!(await deletePostAction(post.post_id))) setIsVisible(true);
   };
 
   return (
     <article
-      className={`${visible ? "" : "hidden"} overflow-hidden rounded-xl border p-4`}
+      className={`${isVisible ? "" : "hidden"} overflow-hidden rounded-xl border p-4`}
     >
+      <Dialog
+        open={isReplyVisible}
+        onOpenChange={() => setIsReplyVisible(!isReplyVisible)}
+      >
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Reply to {post.display_name}</DialogTitle>
+            <DialogDescription className="sr-only">
+              Reply to {post.display_name}
+            </DialogDescription>
+          </DialogHeader>
+          <NewPostForm type="reply" parentPostId={post.post_id} />
+        </DialogContent>
+      </Dialog>
       <div className="flex gap-3">
         <Link href={`/${post.username}`} className="h-fit">
           <Avatar className="h-10 w-10">
@@ -124,7 +148,10 @@ export default function Post({ post }: PostProps) {
             </Tooltip>
             <Tooltip>
               <TooltipTrigger asChild>
-                <button className="group flex items-center gap-2 text-muted-foreground transition-colors hover:text-sky-500">
+                <button
+                  className="group flex items-center gap-2 text-muted-foreground transition-colors hover:text-sky-500"
+                  onClick={() => setIsReplyVisible(true)}
+                >
                   <LucideMessageCircle className="h-4 w-4" />
                   <span className="text-sm">{post.reply_count}</span>
                 </button>
