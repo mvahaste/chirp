@@ -4,6 +4,8 @@ _The best bird-themed social media platform._
 
 ## 🖼️ Screenshots
 
+Screenshots taken from my account `@mvahaste`.
+
 ### Home
 
 | Desktop                                               | Mobile                                              |
