@@ -13,7 +13,7 @@ export default function DesktopLeftNav({ username }: DesktopLeftNavProps) {
   const pathname = usePathname();
 
   return (
-    <div className="sticky top-[4.75rem] hidden w-full flex-col gap-2 self-start lg:flex">
+    <div className="sticky top-[4.75rem] hidden w-full flex-col gap-1 self-start lg:flex">
       <Button variant="ghost" asChild className="justify-start rounded-full">
         <Link
           href="/"
