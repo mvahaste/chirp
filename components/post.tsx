@@ -9,7 +9,13 @@ import {
   unlikePostAction,
 } from "@/app/actions";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
-import { LucideHeart, LucideMessageCircle, LucideTrash } from "lucide-react";
+import {
+  LucideBadgeCheck,
+  LucideCircleCheck,
+  LucideHeart,
+  LucideMessageCircle,
+  LucideTrash,
+} from "lucide-react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
 import { avatarFallback, readableDate, timeAgo } from "@/lib/utils";
 import {
@@ -108,9 +114,19 @@ export default function Post({ post }: PostProps) {
           <div className="flex items-center gap-2">
             <Link
               href={`/${post.username}`}
-              className="font-medium decoration-1 hover:underline"
+              className="inline-flex items-center gap-1 font-medium decoration-1 hover:underline"
             >
               {post.display_name}
+              {post.is_verified && (
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <LucideBadgeCheck className="h-4 w-4 stroke-[2.5] text-primary" />
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p className="font-normal">This user is verified.</p>
+                  </TooltipContent>
+                </Tooltip>
+              )}
             </Link>
             <Link
               href={`/${post.username}`}

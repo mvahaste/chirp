@@ -8,7 +8,6 @@ import { createClient } from "@/utils/supabase/client";
 import { Skeleton } from "./ui/skeleton";
 
 export default function DesktopRightNav() {
-  // TODO: Fetch with useEffect, loading skeletons
   const [isLoading, setIsLoading] = useState(true);
   const [suggestedProfiles, setSuggestedProfiles] = useState<any[]>([]);
 
@@ -42,6 +41,7 @@ export default function DesktopRightNav() {
                 key={profile.id}
                 username={profile.username}
                 displayName={profile.display_name}
+                isVerified={profile.is_verified}
                 avatar={profile.avatar}
               />
             ))

@@ -2,9 +2,14 @@ import FollowEditButton from "@/components/follow-edit-button";
 import PostsFeed from "@/components/posts-feed";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { avatarFallback } from "@/lib/utils";
 import { createClient } from "@/utils/supabase/server";
-import { LucideCalendarDays } from "lucide-react";
+import { LucideBadgeCheck, LucideCalendarDays } from "lucide-react";
 
 export default async function ProfilePage({
   params,
@@ -56,8 +61,19 @@ export default async function ProfilePage({
           <div className="pb-4 pt-20">
             <div className="flex items-start justify-between">
               <div className="space-y-1">
-                <h1 className="text-2xl font-bold">
+                <h1 className="inline-flex items-center gap-2 text-2xl font-bold">
                   {profile ? profile.display_name : "@" + username}
+
+                  {profile.is_verified && (
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <LucideBadgeCheck className="h-6 w-6 stroke-[3] text-primary" />
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p className="font-normal">This user is verified.</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  )}
                 </h1>
                 {profile && (
                   <p className="flex items-center gap-2 text-muted-foreground">
