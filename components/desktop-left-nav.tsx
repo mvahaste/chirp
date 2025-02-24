@@ -17,7 +17,7 @@ export default function DesktopLeftNav({ username }: DesktopLeftNavProps) {
       <Button variant="ghost" asChild className="justify-start rounded-full">
         <Link
           href="/"
-          className={`${pathname == "/" ? "font-[650]" : ""} flex flex-row items-center gap-2`}
+          className={`${pathname == "/" ? "font-[700]" : ""} flex flex-row items-center gap-2`}
         >
           <LucideHome /> Home
         </Link>
@@ -25,7 +25,7 @@ export default function DesktopLeftNav({ username }: DesktopLeftNavProps) {
       <Button variant="ghost" asChild className="justify-start rounded-full">
         <Link
           href="/search"
-          className={`${pathname == "/search" ? "font-[650]" : ""} flex flex-row items-center gap-2`}
+          className={`${pathname == "/search" ? "font-[700]" : ""} flex flex-row items-center gap-2`}
         >
           <LucideSearch /> Search
         </Link>
@@ -33,7 +33,7 @@ export default function DesktopLeftNav({ username }: DesktopLeftNavProps) {
       <Button variant="ghost" asChild className="justify-start rounded-full">
         <Link
           href={username ? "/" + username : "/sign-in"}
-          className={`${pathname == "/" + username ? "font-[650]" : ""} flex flex-row items-center gap-2`}
+          className={`${pathname == "/" + username ? "font-[700]" : ""} flex flex-row items-center gap-2`}
         >
           <LucideUser /> Profile
         </Link>
@@ -41,7 +41,7 @@ export default function DesktopLeftNav({ username }: DesktopLeftNavProps) {
       <Button variant="ghost" asChild className="justify-start rounded-full">
         <Link
           href="/about"
-          className={`${pathname == "/about" ? "font-[650]" : ""} flex flex-row items-center gap-2`}
+          className={`${pathname == "/about" ? "font-[700]" : ""} flex flex-row items-center gap-2`}
         >
           <LucideInfo /> About
         </Link>
