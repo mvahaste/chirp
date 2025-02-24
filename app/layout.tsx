@@ -7,9 +7,17 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import MobileNavBar from "@/components/mobile-nav-bar";
 import { createClient } from "@/utils/supabase/server";
 import Link from "next/link";
-import { LucideHome, LucideInfo, LucideSearch, LucideUser } from "lucide-react";
+import {
+  LucideCommand,
+  LucideHome,
+  LucideInfo,
+  LucideOption,
+  LucideSearch,
+  LucideUser,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import DesktopLeftNav from "@/components/desktop-left-nav";
+import DesktopRightNav from "@/components/desktop-right-nav";
 
 const defaultUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
@@ -53,11 +61,11 @@ export default async function RootLayout({
                 <div className="flex w-full max-w-5xl flex-grow flex-row gap-4 p-3">
                   {/* Left nav bar */}
                   <DesktopLeftNav username={username} />
-                  <div className="w-full lg:w-[32rem] lg:min-w-[32rem] lg:max-w-[32rem]">
+                  <div className="w-full lg:w-[30rem] lg:min-w-[30rem] lg:max-w-[30rem]">
                     {children}
                   </div>
                   {/* Right nav bar */}
-                  <div className="hidden w-full bg-muted lg:block" />
+                  <DesktopRightNav />
                 </div>
               </div>
               <Footer />
