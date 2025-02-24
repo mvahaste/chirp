@@ -32,7 +32,7 @@ export default function DesktopLeftNav({ username }: DesktopLeftNavProps) {
       </Button>
       <Button variant="ghost" asChild className="justify-start rounded-full">
         <Link
-          href={"/" + username}
+          href={username ? "/" + username : "/sign-in"}
           className={`${pathname == "/" + username ? "font-[650]" : ""} flex flex-row items-center gap-2`}
         >
           <LucideUser /> Profile

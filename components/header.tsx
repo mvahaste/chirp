@@ -19,10 +19,7 @@ export default function Header({ username }: HeaderProps) {
             <Bird /> Chirp
           </Link>
         </div>
-        <div className="flex flex-row items-center gap-4">
-          <div className="mr-4 hidden flex-row items-center gap-8 lg:flex">
-            <HeaderNav username={username} />
-          </div>
+        <div className="flex flex-row items-center gap-2">
           <ThemeSwitcher />
           {!hasEnvVars ? <EnvVarWarning /> : <HeaderAuth />}
         </div>
