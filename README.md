@@ -2,7 +2,7 @@
 
 _The best bird-themed social media platform._
 
-## Table of contents
+## Table of Contents
 
 1. [🐦 Chirp](#🐦-chirp)
    1. [😮 What is it?](#😮-what-is-it?)
