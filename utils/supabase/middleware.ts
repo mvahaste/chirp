@@ -62,9 +62,13 @@ export const updateSession = async (request: NextRequest) => {
       return NextResponse.redirect(new URL(`/${data.username}`, request.url));
     }
 
-    // if (request.nextUrl.pathname === "/" && !user.error) {
-    //   return NextResponse.redirect(new URL("/protected", request.url));
-    // }
+    if (request.nextUrl.pathname === "/sign-in" && !user.error) {
+      return NextResponse.redirect(new URL("/", request.url));
+    }
+
+    if (request.nextUrl.pathname === "/sign-up" && !user.error) {
+      return NextResponse.redirect(new URL("/", request.url));
+    }
 
     return response;
   } catch (e) {
