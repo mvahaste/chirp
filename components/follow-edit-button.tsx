@@ -71,10 +71,17 @@ export default function FollowEditButton({
         <Button
           className="absolute right-0 rounded-full"
           variant="outline"
-          onClick={() => {
+          onClick={(e) => {
+            if (!isSignedIn) {
+              e.preventDefault();
+              window.location.href = "/sign-in";
+              return;
+            }
+
             if (is_self) {
               // Edit profile
             } else {
+              e.preventDefault();
               handleFollow();
             }
           }}

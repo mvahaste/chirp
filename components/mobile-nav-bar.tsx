@@ -29,7 +29,7 @@ export default function MobileNavBar({ username }: MobileNavBarProps) {
       </Link>
       {/* Profile */}
       <Link
-        href={"/" + (username || "login")}
+        href={"/" + (username || "sign-in")}
         className={`${pathname == "/" + username ? "border-t-2 border-foreground" : "border-t border-foreground/10"} flex w-full items-center justify-center gap-3 py-4`}
       >
         <LucideUser />

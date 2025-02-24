@@ -168,7 +168,14 @@ export default function Post({ post }: PostProps) {
               <TooltipTrigger asChild>
                 <button
                   className="group flex items-center gap-2 text-muted-foreground transition-colors hover:text-sky-500"
-                  onClick={() => setIsReplyVisible(true)}
+                  onClick={() => {
+                    if (!isSignedIn) {
+                      window.location.href = "/sign-in";
+                      return;
+                    }
+
+                    setIsReplyVisible(true);
+                  }}
                 >
                   <LucideMessageCircle className="h-4 w-4" />
                   <span className="text-sm">{post.reply_count}</span>
