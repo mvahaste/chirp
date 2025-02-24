@@ -1,8 +1,6 @@
 import { newPostAction } from "@/app/actions";
 import { SubmitButton } from "./submit-button";
 import { AutosizeTextarea } from "./ui/autosize-textarea";
-import { Button } from "./ui/button";
-import { LucideImagePlus } from "lucide-react";
 import { useState } from "react";
 
 interface NewPostFormProps {

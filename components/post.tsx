@@ -11,7 +11,6 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import {
   LucideBadgeCheck,
-  LucideCircleCheck,
   LucideHeart,
   LucideMessageCircle,
   LucideTrash,
@@ -35,9 +34,6 @@ export default function Post({ post }: PostProps) {
   const [isVisible, setIsVisible] = useState(true);
   const [isReplyVisible, setIsReplyVisible] = useState(false);
   const [hasLiked, setHasLiked] = useState(post.has_liked);
-  const [hasBookmarked, setHasBookmarked] = useState(
-    post.has_bookmarked ?? false,
-  );
   const [isSignedIn, setIsSignedIn] = useState(false);
   const [parentPost, setParentPost] = useState<any | null>(null);
 

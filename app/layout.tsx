@@ -6,16 +6,6 @@ import Footer from "@/components/footer";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import MobileNavBar from "@/components/mobile-nav-bar";
 import { createClient } from "@/utils/supabase/server";
-import Link from "next/link";
-import {
-  LucideCommand,
-  LucideHome,
-  LucideInfo,
-  LucideOption,
-  LucideSearch,
-  LucideUser,
-} from "lucide-react";
-import { Button } from "@/components/ui/button";
 import DesktopLeftNav from "@/components/desktop-left-nav";
 import DesktopRightNav from "@/components/desktop-right-nav";
 
