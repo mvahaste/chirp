@@ -2,6 +2,16 @@
 
 _The best bird-themed social media platform._
 
+## Table of contents
+
+1. [🐦 Chirp](#🐦-chirp)
+   1. [😮 What is it?](#😮-what-is-it?)
+   2. [🤔 Why make this?](#🤔-why-make-this?)
+   3. [⚙️ How was it made?](#⚙️-how-was-it-made?)
+   4. [🖼️ Screenshots](#🖼️-screenshots)
+      1. [Home](#home)
+      2. [Profile](#profile)
+
 ## 😮 What is it?
 
 Chirp is a basic Twitter clone made with [Next.js 15](https://nextjs.org/) and [Supabase](https://supabase.com/).
