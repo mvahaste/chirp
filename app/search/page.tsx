@@ -122,9 +122,8 @@ export default function SearchPage() {
           </h3>
           {!isUserResultsLoading &&
             userResults.map((user: any) => (
-              <div className="rounded-xl border p-3">
+              <div key={user.id} className="rounded-xl border p-3">
                 <MiniUserLink
-                  key={user.id}
                   username={user.username}
                   displayName={user.display_name}
                   avatar={user.avatar}
