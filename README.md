@@ -6,10 +6,9 @@ _The best bird-themed social media platform._
 
 ### Home
 
-| Desktop | Mobile |
-| - | - |
-| Aa. | Aa. |
-
+| Desktop                     | Mobile                     |
+| --------------------------- | -------------------------- |
+| ![screenshots/desktop-home] | ![screenshots/mobile-home] |
 
 ### Profile
 
