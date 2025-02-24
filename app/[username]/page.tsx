@@ -53,6 +53,8 @@ export default async function ProfilePage({
           </Avatar>
           {profile && (
             <FollowEditButton
+              display_name={profile.display_name}
+              bio={profile.bio}
               user_id={profile.id}
               is_self={profile.is_self}
               is_following={profile.is_auth_user_following}
@@ -64,7 +66,7 @@ export default async function ProfilePage({
                 <h1 className="inline-flex items-center gap-2 text-2xl font-bold">
                   {profile ? profile.display_name : "@" + username}
 
-                  {profile.is_verified && (
+                  {profile && profile.is_verified && (
                     <Tooltip>
                       <TooltipTrigger asChild>
                         <LucideBadgeCheck className="h-6 w-6 stroke-[3] text-primary" />

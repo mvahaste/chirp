@@ -38,16 +38,16 @@ export default function NewPostForm({ type, parentPostId }: NewPostFormProps) {
           {type == "post" ? "Post" : "Reply"}
         </SubmitButton>
         <div className="flex-grow" />
-        <Button
-          className="gap-2 rounded-full"
-          variant="outline"
-          onClick={(e) => {
-            e.preventDefault();
-          }}
-        >
-          <LucideImagePlus className="w-5" />
-          Image
-        </Button>
+        {/* <Button */}
+        {/*   className="gap-2 rounded-full" */}
+        {/*   variant="outline" */}
+        {/*   onClick={(e) => { */}
+        {/*     e.preventDefault(); */}
+        {/*   }} */}
+        {/* > */}
+        {/*   <LucideImagePlus className="w-5" /> */}
+        {/*   Image */}
+        {/* </Button> */}
         <div
           className={`${content.length > 320 ? "border-destructive text-destructive" : ""} grid items-center rounded-full border px-4 text-sm`}
         >

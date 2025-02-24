@@ -3,7 +3,11 @@
 import { useEffect, useState } from "react";
 import { Button } from "./ui/button";
 import { createClient } from "@/utils/supabase/client";
-import { followUserAction, unfollowUserAction } from "@/app/actions";
+import {
+  followUserAction,
+  unfollowUserAction,
+  updateProfileAction,
+} from "@/app/actions";
 import {
   Dialog,
   DialogContent,
@@ -17,12 +21,16 @@ import { Input } from "./ui/input";
 import { SubmitButton } from "./submit-button";
 
 interface FollowEditButtonProps {
+  display_name: string;
+  bio: string;
   user_id: string;
   is_self: boolean;
   is_following: boolean;
 }
 
 export default function FollowEditButton({
+  display_name,
+  bio,
   user_id,
   is_self,
   is_following,
@@ -98,23 +106,33 @@ export default function FollowEditButton({
         </DialogHeader>
         <form className="flex flex-col gap-1.5 [&>input]:mb-3">
           <Label htmlFor="name">Name</Label>
-          <Input name="name" type="text" placeholder="Your name" />
+          <Input
+            name="name"
+            type="text"
+            placeholder="Your name"
+            defaultValue={display_name}
+          />
           <Label htmlFor="bio">Bio</Label>
-          <Input name="bio" type="text" placeholder="A little about yourself" />
-          <Label htmlFor="avatar">Avatar</Label>
           <Input
-            name="avatar"
-            type="file"
-            placeholder="https://example.com/avatar.png"
+            name="bio"
+            type="text"
+            placeholder="A little about yourself"
+            defaultValue={bio}
           />
-          <Label htmlFor="cover">Cover</Label>
-          <Input
-            name="cover"
-            type="file"
-            placeholder="https://example.com/cover.png"
-          />
+          {/* <Label htmlFor="avatar">Avatar</Label> */}
+          {/* <Input */}
+          {/*   name="avatar" */}
+          {/*   type="file" */}
+          {/*   placeholder="https://example.com/avatar.png" */}
+          {/* /> */}
+          {/* <Label htmlFor="cover">Cover</Label> */}
+          {/* <Input */}
+          {/*   name="cover" */}
+          {/*   type="file" */}
+          {/*   placeholder="https://example.com/cover.png" */}
+          {/* /> */}
           <SubmitButton
-            formAction=""
+            formAction={updateProfileAction}
             pendingText="Saving..."
             className="rounded-full"
           >

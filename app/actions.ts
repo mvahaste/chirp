@@ -227,3 +227,22 @@ export const unfollowUserAction = async (id: string) => {
 
   return true;
 };
+
+export const updateProfileAction = async (formData: FormData) => {
+  const name = formData.get("name") as string;
+  const bio = formData.get("bio") as string;
+  const supabase = await createClient();
+  const id = (await supabase.auth.getUser()).data.user?.id;
+
+  const { data, error } = await supabase
+    .from("profiles")
+    .update({ display_name: name ? name : null, bio: bio ? bio : null })
+    .eq("id", id);
+
+  if (error) {
+    console.error(error.message);
+    encodedRedirect("error", "/profile", "Could not update profile");
+  }
+
+  return redirect("/profile");
+};
