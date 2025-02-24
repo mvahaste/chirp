@@ -82,6 +82,16 @@ export default function AboutPage() {
           </a>{" "}
           for CSS
         </li>
+        <li>
+          <a
+            className="font-medium text-primary hover:underline"
+            href="https://vercel.com/"
+            rel="nofollow"
+          >
+            Vercel
+          </a>{" "}
+          for the hosting
+        </li>
       </ul>
     </div>
   );
