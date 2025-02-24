@@ -1,12 +1,6 @@
 "use client";
 
-import {
-  LucideBookmark,
-  LucideHome,
-  LucideInfo,
-  LucideSearch,
-  LucideUser,
-} from "lucide-react";
+import { LucideHome, LucideInfo, LucideSearch, LucideUser } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -18,7 +12,7 @@ export default function MobileNavBar({ username }: MobileNavBarProps) {
   const pathname = usePathname();
 
   return (
-    <div className="sticky bottom-0 z-50 flex w-full bg-background/95 shadow-sm backdrop-blur supports-[backdrop-filter]:bg-background/60 sm:hidden">
+    <div className="sticky bottom-0 z-50 flex w-full bg-background/95 shadow-sm backdrop-blur supports-[backdrop-filter]:bg-background/60 lg:hidden">
       {/* Home */}
       <Link
         href="/"
