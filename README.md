@@ -2,22 +2,6 @@
 
 _The best bird-themed social media platform._
 
-## 🖼️ Screenshots
-
-Screenshots taken from my account `@mvahaste`.
-
-### Home
-
-| Desktop                                               | Mobile                                              |
-| ----------------------------------------------------- | --------------------------------------------------- |
-| ![Home page on Desktop](screenshots/desktop-home.png) | ![Home page on Mobile](screenshots/mobile-home.png) |
-
-### Profile
-
-| Desktop                                                     | Mobile                                                    |
-| ----------------------------------------------------------- | --------------------------------------------------------- |
-| ![Profile page on Desktop](screenshots/desktop-profile.png) | ![Profile page on Mobile](screenshots/mobile-profile.png) |
-
 ## 😮 What is it?
 
 Chirp is a basic Twitter clone made with [Next.js 15](https://nextjs.org/) and [Supabase](https://supabase.com/).
@@ -38,3 +22,19 @@ Chirp was made with the following technologies:
 - [Supabase](https://supabase.com/) for the backend
 - [shadcn/ui](https://ui.shadcn.com/) for base UI components
 - [TailwindCSS](https://tailwindcss.com/) for CSS
+
+## 🖼️ Screenshots
+
+Screenshots taken from my account `@mvahaste`.
+
+### Home
+
+| Desktop                                               | Mobile                                              |
+| ----------------------------------------------------- | --------------------------------------------------- |
+| ![Home page on Desktop](screenshots/desktop-home.png) | ![Home page on Mobile](screenshots/mobile-home.png) |
+
+### Profile
+
+| Desktop                                                     | Mobile                                                    |
+| ----------------------------------------------------------- | --------------------------------------------------------- |
+| ![Profile page on Desktop](screenshots/desktop-profile.png) | ![Profile page on Mobile](screenshots/mobile-profile.png) |
