@@ -46,7 +46,7 @@ export default function DesktopRightNav() {
               />
             ))
           ) : (
-            <p>No suggested users.</p>
+            <p className="text-sm text-muted-foreground">No suggested users.</p>
           ))}
         {isLoading && (
           <>
