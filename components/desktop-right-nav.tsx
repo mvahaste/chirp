@@ -74,7 +74,7 @@ export default function DesktopRightNav() {
       <div className="flex flex-col gap-1 rounded-xl border p-3">
         <h3 className="text-lg font-medium">No Premium Needed</h3>
         <p className="text-sm">
-          Chirp is completely open and free, no need a subscription to
+          Chirp is completely open and free, no need for a subscription to
           artificially boost your posts or avoid censorship!
         </p>
         <Button variant="default" className="mt-2 rounded-full" disabled>
