@@ -31,6 +31,7 @@ Chirp was made with the following technologies:
 - [Supabase](https://supabase.com/) for the backend
 - [shadcn/ui](https://ui.shadcn.com/) for base UI components
 - [TailwindCSS](https://tailwindcss.com/) for CSS
+- [Vercel](https://vercel.com/) for the hosting
 
 ## 🖼️ Screenshots
 
