@@ -6,11 +6,15 @@ _The best bird-themed social media platform._
 
 ### Home
 
-| Desktop                     | Mobile                     |
-| --------------------------- | -------------------------- |
-| ![screenshots/desktop-home] | ![screenshots/mobile-home] |
+| Desktop                                           | Mobile                                              |
+| ------------------------------------------------- | --------------------------------------------------- |
+| ![Home page on Desktop](screenshots/desktop-home) | ![Home page on Mobile](screenshots/mobile-home.png) |
 
 ### Profile
+
+| Desktop                                                 | Mobile                                                    |
+| ------------------------------------------------------- | --------------------------------------------------------- |
+| ![Profile page on Desktop](screenshots/desktop-profile) | ![Profile page on Mobile](screenshots/mobile-profile.png) |
 
 ## 😮 What is it?
 
