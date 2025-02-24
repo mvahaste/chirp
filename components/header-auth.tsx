@@ -30,7 +30,7 @@ export default async function AuthButton() {
               size="sm"
               variant={"outline"}
               disabled
-              className="pointer-events-none cursor-none opacity-75"
+              className="pointer-events-none cursor-none rounded-full opacity-75"
             >
               <Link href="/sign-in">Sign in</Link>
             </Button>
@@ -39,7 +39,7 @@ export default async function AuthButton() {
               size="sm"
               variant={"default"}
               disabled
-              className="pointer-events-none cursor-none opacity-75"
+              className="pointer-events-none cursor-none rounded-full opacity-75"
             >
               <Link href="/sign-up">Sign up</Link>
             </Button>
@@ -51,17 +51,17 @@ export default async function AuthButton() {
   return user ? (
     <div className="flex items-center gap-4">
       <form action={signOutAction}>
-        <Button type="submit" variant={"outline"}>
+        <Button type="submit" variant={"outline"} className="rounded-full">
           Sign out
         </Button>
       </form>
     </div>
   ) : (
     <div className="flex gap-2">
-      <Button asChild size="sm" variant={"outline"}>
+      <Button asChild size="sm" variant={"outline"} className="rounded-full">
         <Link href="/sign-in">Sign in</Link>
       </Button>
-      <Button asChild size="sm" variant={"default"}>
+      <Button asChild size="sm" variant={"default"} className="rounded-full">
         <Link href="/sign-up">Sign up</Link>
       </Button>
     </div>

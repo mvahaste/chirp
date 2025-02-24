@@ -57,7 +57,7 @@ export const signInAction = async (formData: FormData) => {
     return encodedRedirect("error", "/sign-in", error.message);
   }
 
-  return redirect("/protected");
+  return redirect("/");
 };
 
 export const forgotPasswordAction = async (formData: FormData) => {
@@ -139,13 +139,18 @@ export const signOutAction = async () => {
 
 export const newPostAction = async (formData: FormData) => {
   const content = formData.get("content") as string;
+  const parentPostId = formData.get("parent_post_id") as string;
   const supabase = await createClient();
+
+  console.log(parentPostId, parentPostId || null);
 
   if (content.length > 320) {
     return encodedRedirect("error", "/", "Post is too long");
   }
 
-  const { error } = await supabase.from("posts").insert([{ content }]);
+  const { error } = await supabase
+    .from("posts")
+    .insert([{ content, parent_post_id: parentPostId || null }]);
 
   if (error) {
     console.error(error.message);
@@ -192,4 +197,52 @@ export const unlikePostAction = async (id: string) => {
   }
 
   return true;
+};
+
+export const followUserAction = async (id: string) => {
+  const supabase = await createClient();
+  const { error } = await supabase
+    .from("follows")
+    .insert([{ following_id: id }]);
+
+  if (error) {
+    console.error(error.message);
+    return false;
+  }
+
+  return true;
+};
+
+export const unfollowUserAction = async (id: string) => {
+  const supabase = await createClient();
+  const { error } = await supabase
+    .from("follows")
+    .delete()
+    .match({ following_id: id });
+
+  if (error) {
+    console.error(error.message);
+    return false;
+  }
+
+  return true;
+};
+
+export const updateProfileAction = async (formData: FormData) => {
+  const name = formData.get("name") as string;
+  const bio = formData.get("bio") as string;
+  const supabase = await createClient();
+  const id = (await supabase.auth.getUser()).data.user?.id;
+
+  const { data, error } = await supabase
+    .from("profiles")
+    .update({ display_name: name ? name : null, bio: bio ? bio : null })
+    .eq("id", id);
+
+  if (error) {
+    console.error(error.message);
+    encodedRedirect("error", "/profile", "Could not update profile");
+  }
+
+  return redirect("/profile");
 };

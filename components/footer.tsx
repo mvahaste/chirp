@@ -1,5 +1,3 @@
-import { ThemeSwitcher } from "./theme-switcher";
-
 export default function Footer() {
   return (
     <footer className="mx-auto flex w-full items-center justify-center gap-6 pb-4 pt-8 text-center text-xs">
@@ -14,7 +12,6 @@ export default function Footer() {
           GitHub
         </a>
       </p>
-      <ThemeSwitcher />
     </footer>
   );
 }

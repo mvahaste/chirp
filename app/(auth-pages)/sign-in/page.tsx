@@ -1,5 +1,4 @@
 import { signInAction } from "@/app/actions";
-import DemoUserSignIn from "@/components/demo-user-sign-in";
 import { FormMessage, Message } from "@/components/form-message";
 import { SubmitButton } from "@/components/submit-button";
 import { Input } from "@/components/ui/input";
@@ -17,7 +16,6 @@ export default async function Login(props: { searchParams: Promise<Message> }) {
           Sign up
         </Link>
       </p>
-      <DemoUserSignIn />
       <form className="mt-8 flex flex-col gap-2 [&>input]:mb-3">
         <Label htmlFor="email">Email</Label>
         <Input

@@ -8,10 +8,11 @@ export function cn(...inputs: ClassValue[]) {
 export const avatarFallback = (name: string) => {
   if (name.split(" ").length > 1) {
     return (
-      name.split(" ")[0].substring(0, 1) + name.split(" ")[1].substring(0, 1)
+      name.split(" ")[0].substring(0, 1) +
+      name.split(" ")[1].substring(0, 1).toUpperCase()
     );
   } else {
-    return name.substring(0, 2);
+    return name.substring(0, 1).toUpperCase();
   }
 };
 

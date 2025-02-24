@@ -1,57 +1,40 @@
-import Post from "@/components/post";
+import FollowEditButton from "@/components/follow-edit-button";
+import PostsFeed from "@/components/posts-feed";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { avatarFallback } from "@/lib/utils";
 import { createClient } from "@/utils/supabase/server";
-import { LucideCalendarDays } from "lucide-react";
+import { LucideBadgeCheck, LucideCalendarDays } from "lucide-react";
 
 export default async function ProfilePage({
   params,
 }: {
-  params: { username: string };
+  params: Promise<{ username: string }>;
 }) {
   const supabase = await createClient();
-  const { data: profile, error } = await supabase
-    .from("public_profiles")
+
+  const username = (await params).username;
+
+  const { data, error } = await supabase
+    .from("profile_details")
     .select()
-    .eq("username", params.username)
-    .single();
+    .eq("username", username);
 
-  if (error || !profile)
-    return <div>{error ? "Error fetching user data." : "User not found."}</div>;
+  if (error) {
+    console.error(error);
+    return (
+      <p className="pt-6 text-center text-sm text-muted-foreground">
+        Error fetching user data.
+      </p>
+    );
+  }
 
-  const { data: posts, error: postsError } = await supabase
-    .from("public_posts")
-    .select()
-    .eq("username", params.username)
-    .is("parent_id", null);
-
-  const { data: replies, error: repliesError } = await supabase
-    .from("public_posts")
-    .select()
-    .eq("username", params.username)
-    .not("parent_id", "is", null);
-
-  // Get likes from the supabase get_liked_posts_by_username function
-
-  const { data: likes, error: likesError } = await supabase.rpc(
-    "get_liked_posts_by_username",
-    {
-      p_username: params.username,
-    },
-  );
-
-  const followEditText = () => {
-    if (profile.is_self) {
-      return "Edit Profile";
-    }
-
-    if (profile.is_following) {
-      return "Following";
-    } else {
-      return "Follow";
-    }
-  };
+  const profile = data[0];
 
   return (
     <main className="w-full">
@@ -59,103 +42,129 @@ export default async function ProfilePage({
       <div className="space-y-4">
         <div className="h-32 rounded-xl bg-muted" />
         <div className="relative">
-          <Avatar className="absolute -top-16 left-4 h-32 w-32 border-4 border-background">
+          <Avatar className="absolute -top-16 left-4 h-32 w-32 border-4 border-background text-5xl">
             <AvatarImage
               src="/placeholder.svg?height=128&width=128"
-              alt={profile.username}
+              alt={profile ? profile.username : "Blank avatar"}
             />
-            <AvatarFallback>?</AvatarFallback>
+            <AvatarFallback>
+              {avatarFallback(profile ? profile.display_name : "")}
+            </AvatarFallback>
           </Avatar>
+          {profile && (
+            <FollowEditButton
+              display_name={profile.display_name}
+              bio={profile.bio}
+              user_id={profile.id}
+              is_self={profile.is_self}
+              is_following={profile.is_auth_user_following}
+            />
+          )}
           <div className="pb-4 pt-20">
             <div className="flex items-start justify-between">
               <div className="space-y-1">
-                <h1 className="text-2xl font-bold">{profile.display_name}</h1>
-                <p className="flex items-center gap-2 text-muted-foreground">
-                  @{profile.username}{" "}
-                  {profile.is_following_me && (
-                    <span className="mt-0.5 rounded bg-muted px-1.5 py-0.5 text-xs">
-                      Follows you
-                    </span>
+                <h1 className="inline-flex items-center gap-2 text-2xl font-bold">
+                  {profile ? profile.display_name : "@" + username}
+
+                  {profile && profile.is_verified && (
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <LucideBadgeCheck className="h-6 w-6 stroke-[3] text-primary" />
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p className="font-normal">This user is verified.</p>
+                      </TooltipContent>
+                    </Tooltip>
                   )}
-                </p>
-              </div>
-              <Button
-                variant="outline"
-                // onClick={() => {
-                //   if (profile.is_self) {
-                //     // Edit profile
-                //   } else {
-                //     // Follow/unfollow
-                //   }
-                // }}
-              >
-                {followEditText()}
-              </Button>
-            </div>
-            <div className="mt-4 space-y-3">
-              <p className="whitespace-pre text-base">{profile.bio}</p>
-              <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
-                <div className="flex items-center gap-1">
-                  <LucideCalendarDays className="h-4 w-4" />
-                  Joined{" "}
-                  {new Date(profile.created_at).toLocaleDateString("en-US", {
-                    month: "long",
-                    year: "numeric",
-                  })}
-                </div>
-              </div>
-              <div className="flex gap-4 text-sm">
-                <div className="flex items-center gap-1">
-                  <span className="font-semibold text-foreground">
-                    {profile.following_count}
-                  </span>
-                  <span className="text-muted-foreground">Following</span>
-                </div>
-                <div className="flex items-center gap-1">
-                  <span className="font-semibold text-foreground">
-                    {profile.followers_count}
-                  </span>
-                  <span className="text-muted-foreground">Followers</span>
-                </div>
+                </h1>
+                {profile && (
+                  <p className="flex items-center gap-2 text-muted-foreground">
+                    @{profile.username}{" "}
+                    {profile.is_following_auth_user && (
+                      <span className="mt-0.5 rounded bg-muted px-1.5 py-0.5 text-xs">
+                        Follows you
+                      </span>
+                    )}
+                  </p>
+                )}
               </div>
             </div>
+            {profile ? (
+              <div className="mt-2 space-y-3 overflow-hidden">
+                {profile.bio && (
+                  <p className="whitespace-pre-wrap text-sm">{profile.bio}</p>
+                )}
+                <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
+                  <div className="flex items-center gap-1">
+                    <LucideCalendarDays className="h-4 w-4" />
+                    Joined{" "}
+                    {new Date(profile.created_at).toLocaleDateString("en-US", {
+                      month: "long",
+                      year: "numeric",
+                    })}
+                  </div>
+                </div>
+                <div className="flex gap-4 text-sm">
+                  <div className="flex items-center gap-1">
+                    <span className="font-semibold text-foreground">
+                      {profile.following_count}
+                    </span>
+                    <span className="text-muted-foreground">Following</span>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <span className="font-semibold text-foreground">
+                      {profile.followers_count}
+                    </span>
+                    <span className="text-muted-foreground">Followers</span>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <h3 className="px-2 pt-16 text-center text-3xl font-bold">
+                This account doesn't exist.
+              </h3>
+            )}
           </div>
         </div>
       </div>
-
       {/* Tabs */}
-      <Tabs defaultValue="posts" className="mt-4">
-        <TabsList className="h-auto w-full justify-start rounded-none border-b bg-transparent p-0">
-          {["posts", "replies", "likes"].map((tab) => (
+      {profile && (
+        <Tabs defaultValue="posts">
+          <TabsList className="mb-2 h-auto w-full rounded-none border-b bg-transparent p-0">
             <TabsTrigger
-              key={tab}
-              value={tab}
-              className="flex-1 rounded-none py-3 data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:bg-transparent"
+              value="posts"
+              className="w-full rounded-none py-3 data-[state=active]:border-b-2 data-[state=active]:border-b-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none"
             >
-              {tab.charAt(0).toUpperCase() + tab.slice(1)}
+              Posts
             </TabsTrigger>
-          ))}
-        </TabsList>
-        {[
-          ["posts", posts],
-          ["replies", replies],
-          ["likes", likes],
-        ].map(([key, data]) => (
-          <TabsContent key={key} value={key} className="mt-6">
-            {data.length === 0 ? (
-              <div className="text-center text-muted-foreground">
-                No {key} yet.
-              </div>
-            ) : (
-              <div className="flex flex-col gap-4">
-                {data.map((post: any) => (
-                  <Post key={post.id} post={post} />
-                ))}
-              </div>
-            )}
+            <TabsTrigger
+              value="replies"
+              className="w-full rounded-none py-3 data-[state=active]:border-b-2 data-[state=active]:border-b-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none"
+            >
+              Replies
+            </TabsTrigger>
+            <TabsTrigger
+              value="likes"
+              className="w-full rounded-none py-3 data-[state=active]:border-b-2 data-[state=active]:border-b-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none"
+            >
+              Likes
+            </TabsTrigger>
+          </TabsList>
+          <TabsContent value="posts">
+            <PostsFeed type="profile" profileType="posts" username={username} />
           </TabsContent>
-        ))}
-      </Tabs>
+          <TabsContent value="replies">
+            <PostsFeed
+              type="profile"
+              profileType="replies"
+              username={username}
+            />
+          </TabsContent>
+          <TabsContent value="likes">
+            <PostsFeed type="profile" profileType="likes" username={username} />
+          </TabsContent>
+        </Tabs>
+      )}
     </main>
   );
 }

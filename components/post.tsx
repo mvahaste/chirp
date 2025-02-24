@@ -9,26 +9,53 @@ import {
   unlikePostAction,
 } from "@/app/actions";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
-import { LucideHeart, LucideMessageCircle, LucideTrash } from "lucide-react";
+import {
+  LucideBadgeCheck,
+  LucideCircleCheck,
+  LucideHeart,
+  LucideMessageCircle,
+  LucideTrash,
+} from "lucide-react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
 import { avatarFallback, readableDate, timeAgo } from "@/lib/utils";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "./ui/dialog";
+import NewPostForm from "./new-post-form";
 
 interface PostProps {
   post: any;
 }
 
 export default function Post({ post }: PostProps) {
-  const [visible, setVisible] = useState(true);
+  const [isVisible, setIsVisible] = useState(true);
+  const [isReplyVisible, setIsReplyVisible] = useState(false);
   const [hasLiked, setHasLiked] = useState(post.has_liked);
   const [hasBookmarked, setHasBookmarked] = useState(
     post.has_bookmarked ?? false,
   );
   const [isSignedIn, setIsSignedIn] = useState(false);
+  const [parentPost, setParentPost] = useState<any | null>(null);
 
   useEffect(() => {
     (async () => {
-      const { data } = await createClient().auth.getUser();
-      setIsSignedIn(!!data.user);
+      const supabase = createClient();
+      const { data: auth } = await supabase.auth.getSession();
+      setIsSignedIn(!!auth.session?.user);
+
+      if (post.parent_post_id) {
+        const { data: parentPost } = await supabase
+          .from("post_feed")
+          .select("display_name, username")
+          .eq("post_id", post.parent_post_id)
+          .single();
+
+        setParentPost(parentPost);
+      }
     })();
   }, []);
 
@@ -36,26 +63,43 @@ export default function Post({ post }: PostProps) {
     if (!isSignedIn) return;
     const prevLiked = hasLiked;
     setHasLiked(!prevLiked);
-    post.likes_count += prevLiked ? -1 : 1;
+    post.like_count += prevLiked ? -1 : 1;
     if (
-      !(await (prevLiked ? unlikePostAction(post.id) : likePostAction(post.id)))
+      !(await (prevLiked
+        ? unlikePostAction(post.post_id)
+        : likePostAction(post.post_id)))
     ) {
       setHasLiked(prevLiked);
-      post.likes_count += prevLiked ? 1 : -1;
+      post.like_count += prevLiked ? 1 : -1;
     }
   };
 
   const handleDelete = async () => {
     if (!isSignedIn) return;
-    setVisible(false);
-    if (!(await deletePostAction(post.id))) setVisible(true);
+
+    setIsVisible(false);
+
+    if (!(await deletePostAction(post.post_id))) setIsVisible(true);
   };
 
   return (
     <article
-      key={post.id}
-      className={`${visible ? "" : "hidden"} overflow-hidden rounded-xl border p-4`}
+      className={`${isVisible ? "" : "hidden"} overflow-hidden rounded-xl border p-4`}
     >
+      <Dialog
+        open={isReplyVisible}
+        onOpenChange={() => setIsReplyVisible(!isReplyVisible)}
+      >
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Reply to {post.display_name}</DialogTitle>
+            <DialogDescription className="sr-only">
+              Reply to {post.display_name}
+            </DialogDescription>
+          </DialogHeader>
+          <NewPostForm type="reply" parentPostId={post.post_id} />
+        </DialogContent>
+      </Dialog>
       <div className="flex gap-3">
         <Link href={`/${post.username}`} className="h-fit">
           <Avatar className="h-10 w-10">
@@ -70,19 +114,29 @@ export default function Post({ post }: PostProps) {
           <div className="flex items-center gap-2">
             <Link
               href={`/${post.username}`}
-              className="font-semibold decoration-1 hover:underline"
+              className="inline-flex items-center gap-1 font-medium decoration-1 hover:underline"
             >
               {post.display_name}
+              {post.is_verified && (
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <LucideBadgeCheck className="h-4 w-4 stroke-[2.5] text-primary" />
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p className="font-normal">This user is verified.</p>
+                  </TooltipContent>
+                </Tooltip>
+              )}
             </Link>
             <Link
               href={`/${post.username}`}
-              className="text-muted-foreground decoration-1 hover:underline"
+              className="text-sm text-muted-foreground decoration-1 hover:underline"
             >
               @{post.username}
             </Link>
             <Tooltip>
               <TooltipTrigger asChild>
-                <span className="text-muted-foreground">
+                <span className="text-sm text-muted-foreground">
                   · {timeAgo(new Date(post.created_at))}
                 </span>
               </TooltipTrigger>
@@ -91,6 +145,14 @@ export default function Post({ post }: PostProps) {
               </TooltipContent>
             </Tooltip>
           </div>
+          {post.parent_post_id && (
+            <p className="text-sm text-muted-foreground">
+              Replying to{" "}
+              <Link href={"/" + post.parent_post_username}>
+                @{post.parent_post_username}
+              </Link>
+            </p>
+          )}
           <p className="whitespace-pre-wrap break-all text-base">
             {post.content}
           </p>
@@ -111,7 +173,7 @@ export default function Post({ post }: PostProps) {
                   <LucideHeart
                     className={`h-4 w-4 transition-colors ${hasLiked ? "fill-rose-500" : ""}`}
                   />
-                  <span className="text-sm">{post.likes_count}</span>
+                  <span className="text-sm">{post.like_count}</span>
                 </button>
               </TooltipTrigger>
               <TooltipContent>
@@ -120,9 +182,19 @@ export default function Post({ post }: PostProps) {
             </Tooltip>
             <Tooltip>
               <TooltipTrigger asChild>
-                <button className="group flex items-center gap-2 text-muted-foreground transition-colors hover:text-sky-500">
+                <button
+                  className="group flex items-center gap-2 text-muted-foreground transition-colors hover:text-sky-500"
+                  onClick={() => {
+                    if (!isSignedIn) {
+                      window.location.href = "/sign-in";
+                      return;
+                    }
+
+                    setIsReplyVisible(true);
+                  }}
+                >
                   <LucideMessageCircle className="h-4 w-4" />
-                  <span className="text-sm">{post.replies_count}</span>
+                  <span className="text-sm">{post.reply_count}</span>
                 </button>
               </TooltipTrigger>
               <TooltipContent>

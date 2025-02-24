@@ -5,6 +5,19 @@ import Header from "@/components/header";
 import Footer from "@/components/footer";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import MobileNavBar from "@/components/mobile-nav-bar";
+import { createClient } from "@/utils/supabase/server";
+import Link from "next/link";
+import {
+  LucideCommand,
+  LucideHome,
+  LucideInfo,
+  LucideOption,
+  LucideSearch,
+  LucideUser,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import DesktopLeftNav from "@/components/desktop-left-nav";
+import DesktopRightNav from "@/components/desktop-right-nav";
 
 const defaultUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
@@ -21,11 +34,17 @@ const geistSans = Geist({
   subsets: ["latin"],
 });
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const supabase = await createClient();
+  const response = await supabase
+    .from("get_current_username")
+    .select("username");
+  const username = response.data?.[0]?.username;
+
   return (
     <html lang="en" className={geistSans.className} suppressHydrationWarning>
       <body className="bg-background text-foreground">
@@ -38,13 +57,19 @@ export default function RootLayout({
           <TooltipProvider>
             <main className="flex min-h-screen flex-col items-center">
               <div className="flex w-full flex-1 flex-col items-center">
-                <Header />
-                <div className="flex w-full max-w-lg flex-grow flex-col p-5">
-                  {children}
+                <Header username={username} />
+                <div className="flex w-full max-w-5xl flex-grow flex-row gap-4 p-3">
+                  {/* Left nav bar */}
+                  <DesktopLeftNav username={username} />
+                  <div className="w-full lg:w-[30rem] lg:min-w-[30rem] lg:max-w-[30rem]">
+                    {children}
+                  </div>
+                  {/* Right nav bar */}
+                  <DesktopRightNav />
                 </div>
               </div>
               <Footer />
-              <MobileNavBar />
+              <MobileNavBar username={username} />
             </main>
           </TooltipProvider>
         </ThemeProvider>
