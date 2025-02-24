@@ -122,13 +122,15 @@ export default function SearchPage() {
           </h3>
           {!isUserResultsLoading &&
             userResults.map((user: any) => (
-              <MiniUserLink
-                key={user.id}
-                username={user.username}
-                displayName={user.display_name}
-                avatar={user.avatar}
-                isVerified={user.is_verified}
-              />
+              <div className="rounded-xl border p-3">
+                <MiniUserLink
+                  key={user.id}
+                  username={user.username}
+                  displayName={user.display_name}
+                  avatar={user.avatar}
+                  isVerified={user.is_verified}
+                />
+              </div>
             ))}
           {isUserResultsLoading && (
             <Skeleton className="h-16 w-full rounded-lg" />
