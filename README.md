@@ -2,6 +2,8 @@
 
 _The best bird-themed social media platform._
 
+_I use the free tier of Supabase so the database is paused._
+
 ## Table of Contents
 
 1. [😮 What is it?](#😮-what-is-it?)
